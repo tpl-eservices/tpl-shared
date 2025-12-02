@@ -2,7 +2,10 @@
 
 namespace Tpl\Shared;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Tpl\Shared\Services\BiblioCommonsTemplateService;
+use Tpl\Shared\View\Composers\BiblioCommonsComposer;
 
 class SharedServiceProvider extends ServiceProvider
 {
@@ -13,6 +16,9 @@ class SharedServiceProvider extends ServiceProvider
     {
         // Merge package config if present
         $this->mergeConfigFrom(__DIR__.'/../config/shared.php', 'shared');
+
+        // Register BiblioCommons service as singleton
+        $this->app->singleton(BiblioCommonsTemplateService::class);
     }
 
     /**
@@ -24,6 +30,12 @@ class SharedServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'tpl-shared');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
+        // Register BiblioCommons view composer for layout components
+        View::composer([
+            'tpl-shared::components.layout',
+            'tpl-shared::components.static-layout',
+        ], BiblioCommonsComposer::class);
 
         // Publish config
         $this->publishes([

@@ -111,6 +111,17 @@ ssh-add ~/.ssh/id_rsa
 
 ## Usage
 
+### BiblioCommons Integration
+
+This package includes BiblioCommons header/footer integration for TPL library applications.
+
+**Quick Start:**
+1. Configure API URL in `config/services.php`
+2. Use `<x-tpl-shared::static-layout>` in your views
+3. Done! Templates are fetched and cached automatically.
+
+See [BIBLIOCOMMONS.md](BIBLIOCOMMONS.md) for complete documentation or [BIBLIOCOMMONS_QUICK_REF.md](BIBLIOCOMMONS_QUICK_REF.md) for quick reference.
+
 ### Views
 
 Use package views in your Blade templates:

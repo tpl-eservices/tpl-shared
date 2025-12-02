@@ -35,4 +35,7 @@ return [
         ],
     ],
 
+    'bibliocommons' => [
+        'external_templates_url' => env('BIBLIOCOMMONS_API_URL', 'https://tpl.bibliocommons.com/widgets/external_templates.json'),
+    ],
 ];
