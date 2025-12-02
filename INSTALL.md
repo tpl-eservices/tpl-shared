@@ -207,6 +207,25 @@ import { Component } from '@/vendor/tpl-shared/js/components/Component';
 
 ## ⚠️ Common Issues & Solutions
 
+### "Git Repository is empty"
+
+**Error:**
+```
+The "https://api.github.com/repos/tpl-eservices/tpl-shared/git/refs/heads?per_page=100" file could not be downloaded (HTTP/2 409):
+{"message":"Git Repository is empty.","documentation_url":"...","status":"409"}
+```
+
+**Cause:** The GitHub repository exists but has no commits pushed yet.
+
+**Solution:** The package maintainer needs to push commits to GitHub first:
+```bash
+cd /path/to/tpl-shared
+git push origin main
+git push origin v0.1.0
+```
+
+After that, you can install the package.
+
 ### "Authentication required (github.com)"
 You need to set up your GitHub token (see Step 1 above).
 
