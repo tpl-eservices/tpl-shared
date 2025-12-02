@@ -24,6 +24,10 @@ yarn-error.log
 # Development-only config files (not published to host apps)
 /config-dev/*.php
 !/config-dev/README.md
+
+# Development-only app files (not published to host apps)
+/app-dev/
+!/app-dev/README.md
 yarn-error.log
 /auth.json
 /.fleet
