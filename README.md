@@ -178,42 +178,35 @@ Alternatively, update your `/etc/hosts` file to include custom domains if needed
 
 ## Development
 
-### Running Tests
+### Package Development
 
+Since this is a package (not a standalone app), development workflow differs:
+
+**For PHP/Laravel changes:**
 ```bash
+# Run tests
 composer test
-```
 
-Or with Pest directly:
-
-```bash
-vendor/bin/pest
-```
-
-### Code Formatting
-
-```bash
+# Format code
 composer format
 ```
 
-Or:
-
+**For frontend changes:**
 ```bash
-vendor/bin/pint
-```
-
-### Frontend Development
-
-```bash
+# Build assets (no dev server for packages)
 pnpm install
-pnpm dev
-```
-
-Build for production:
-
-```bash
 pnpm build
 ```
+
+**To test changes in a host app:**
+1. Symlink the package (see Installation section)
+2. Install with `composer require tpl/shared:@dev`
+3. Publish assets with `php artisan vendor:publish --tag=tpl-shared-assets`
+4. Run Vite **from the host app** (not the package)
+
+> **Note**: Don't run `pnpm dev` in the package directory. Vite requires a full Laravel application context. Instead, run Vite from your host application after symlinking the package.
+
+See [PACKAGE_DEV_NOTES.md](PACKAGE_DEV_NOTES.md) for detailed development workflow.
 
 ## CI/CD
 

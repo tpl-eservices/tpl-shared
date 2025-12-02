@@ -90,6 +90,6 @@ jobs:
       - name: Check TypeScript
         run: pnpm types
 
-      - name: Build assets
-        run: pnpm build
+      # Note: Skip `pnpm build` in CI for packages as it requires Laravel context
+      # Host apps will build package assets when they compile their own assets
 
