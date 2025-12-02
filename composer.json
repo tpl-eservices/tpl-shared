@@ -1,0 +1,36 @@
+{
+    "name": "tpl/shared",
+    "description": "Shared package for multiple Laravel apps",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "laravel/framework": "^12.0"
+    },
+    "require-dev": {
+        "pestphp/pest": "^4.0",
+        "laravel/pint": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tpl\\Shared\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tpl\\Shared\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Tpl\\Shared\\SharedServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
