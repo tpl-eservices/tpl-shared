@@ -21,7 +21,7 @@ Add to your `composer.json`:
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/your-org/tpl-shared.git"
+            "url": "https://github.com/tpl-eservices/tpl-shared.git"
         }
     ]
 }

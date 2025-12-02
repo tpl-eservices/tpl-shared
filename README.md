@@ -19,7 +19,7 @@ For **private repositories**, add this to your host app's `composer.json`:
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/your-org/tpl-shared.git"
+            "url": "https://github.com/tpl-eservices/tpl-shared.git"
         }
     ]
 }

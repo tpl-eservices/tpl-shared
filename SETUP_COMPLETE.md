@@ -72,7 +72,7 @@ php artisan vendor:publish --tag=tpl-shared
        "repositories": [
            {
                "type": "vcs",
-               "url": "https://github.com/your-org/tpl-shared.git"
+               "url": "https://github.com/tpl-eservices/tpl-shared.git"
            }
        ]
    }
@@ -118,7 +118,7 @@ php artisan vendor:publish --tag=tpl-shared
 
 1. **Initialize or verify git remote**:
    ```bash
-   git remote add origin https://github.com/your-org/tpl-shared.git
+   git remote add origin https://github.com/tpl-eservices/tpl-shared.git
    # or
    git remote -v  # to check existing remote
    ```
