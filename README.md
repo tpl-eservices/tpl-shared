@@ -117,7 +117,7 @@ This package includes BiblioCommons header/footer integration for TPL library ap
 
 **Quick Start:**
 1. Configure API URL in `config/services.php`
-2. Use `<x-tpl-shared-static-layout>` in your views
+2. Use `<x-tpl-shared::static-layout>` in your views
 3. Done! Templates are fetched and cached automatically.
 
 See [BIBLIOCOMMONS.md](BIBLIOCOMMONS.md) for complete documentation or [BIBLIOCOMMONS_QUICK_REF.md](BIBLIOCOMMONS_QUICK_REF.md) for quick reference.

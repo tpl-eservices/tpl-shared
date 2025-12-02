@@ -19,11 +19,11 @@ BIBLIOCOMMONS_API_URL=https://your-library.bibliocommons.com/api/external-templa
 ### 2. Use Layout Component
 
 ```blade
-<x-tpl-shared-static-layout>
+<x-tpl-shared::static-layout>
     <div class="py-12">
         <h1>Your Page Content</h1>
     </div>
-</x-tpl-shared-static-layout>
+</x-tpl-shared::static-layout>
 ```
 
 ### 3. Done! ✅
@@ -40,16 +40,16 @@ The package automatically:
 
 ### Static Layout
 ```blade
-<x-tpl-shared-static-layout>
+<x-tpl-shared::static-layout>
     <!-- Static page content -->
-</x-tpl-shared-static-layout>
+</x-tpl-shared::static-layout>
 ```
 
 ### Dynamic Layout (with Inertia)
 ```blade
-<x-tpl-shared-layout>
+<x-tpl-shared::layout>
     @inertia
-</x-tpl-shared-layout>
+</x-tpl-shared::layout>
 ```
 
 ---

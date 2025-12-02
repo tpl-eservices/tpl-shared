@@ -9,7 +9,7 @@ The package includes an `app.blade.php` file that demonstrates how to integrate 
 Located at `resources/views/app.blade.php`:
 
 ```blade
-<x-tpl-shared-static-layout>
+<x-tpl-shared::static-layout>
   <x-slot:head>
     @viteReactRefresh
     @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
@@ -17,7 +17,7 @@ Located at `resources/views/app.blade.php`:
   </x-slot:head>
 
   @inertia
-</x-tpl-shared-static-layout>
+</x-tpl-shared::static-layout>
 ```
 
 This serves as a reference implementation showing how to:
@@ -34,7 +34,7 @@ This serves as a reference implementation showing how to:
 Create `resources/views/app.blade.php` in your host application:
 
 ```blade
-<x-tpl-shared-static-layout>
+<x-tpl-shared::static-layout>
   <x-slot:head>
     @viteReactRefresh
     @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
@@ -42,7 +42,7 @@ Create `resources/views/app.blade.php` in your host application:
   </x-slot:head>
 
   @inertia
-</x-tpl-shared-static-layout>
+</x-tpl-shared::static-layout>
 ```
 
 Or use the dynamic layout with center option:
@@ -56,7 +56,7 @@ Or use the dynamic layout with center option:
   </x-slot:head>
 
   @inertia
-</x-tpl-shared-layout>
+</x-tpl-shared::layout>
 ```
 
 ### Option 2: Publish and Customize
@@ -85,7 +85,7 @@ return $this->rootView ?? 'tpl-shared::app';
 Both layouts support a `head` slot for adding content to `<head>`:
 
 ```blade
-<x-tpl-shared-static-layout>
+<x-tpl-shared::static-layout>
   <x-slot:head>
     {{-- Your meta tags, scripts, styles --}}
     @viteReactRefresh
@@ -97,7 +97,7 @@ Both layouts support a `head` slot for adding content to `<head>`:
   </x-slot:head>
 
   @inertia
-</x-tpl-shared-static-layout>
+</x-tpl-shared::static-layout>
 ```
 
 ### Scripts Slot
@@ -105,7 +105,7 @@ Both layouts support a `head` slot for adding content to `<head>`:
 Add scripts at the end of `<body>`:
 
 ```blade
-<x-tpl-shared-static-layout>
+<x-tpl-shared::static-layout>
   @inertia
   
   <x-slot:scripts>
@@ -113,7 +113,7 @@ Add scripts at the end of `<body>`:
       console.log('Custom script');
     </script>
   </x-slot:scripts>
-</x-tpl-shared-static-layout>
+</x-tpl-shared::static-layout>
 ```
 
 ### Custom Container Class
@@ -123,7 +123,7 @@ Change the main content container width:
 ```blade
 <x-tpl-shared-static-layout class="max-w-7xl mx-auto px-4">
   @inertia
-</x-tpl-shared-static-layout>
+</x-tpl-shared::static-layout>
 ```
 
 Default: `max-w-4xl mx-auto`
@@ -153,7 +153,7 @@ Default: `max-w-4xl mx-auto`
     <script src="https://analytics.example.com/script.js"></script>
     @endif
   </x-slot:scripts>
-</x-tpl-shared-static-layout>
+</x-tpl-shared::static-layout>
 ```
 
 ## Inertia Configuration
@@ -264,7 +264,7 @@ If you see this error, ensure:
    ```
 
 3. **Using correct syntax:**
-   - ✅ `<x-tpl-shared-static-layout>`
+   - ✅ `<x-tpl-shared::static-layout>`
    - ❌ `<x-static-layout>` (won't work without publishing)
 
 ### BiblioCommons content not showing
@@ -295,7 +295,7 @@ pnpm dev  # or npm run dev
 
 ## Summary
 
-- ✅ Use `<x-tpl-shared-static-layout>` or `<x-tpl-shared-layout>` in your app.blade.php
+- ✅ Use `<x-tpl-shared::static-layout>` or `<x-tpl-shared::layout>` in your app.blade.php
 - ✅ Add Inertia/Vite directives in the `head` slot
 - ✅ Use `@inertia` directive for mounting your React/Vue app
 - ✅ BiblioCommons header/footer automatically included
