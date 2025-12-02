@@ -9,7 +9,10 @@ class StaticLayout extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct() {}
+    public function __construct(public ?string $class = null)
+    {
+        $this->class = $class ?? 'max-w-4xl mx-auto';
+    }
 
     /**
      * Get the view / contents that represent the component.

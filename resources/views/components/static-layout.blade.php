@@ -44,7 +44,7 @@
   @endif
 
   <main class="grow">
-    <section class="{{ $attributes->isNotEmpty() ? $class : "max-w-4xl mx-auto" }}">
+    <section class="{{ $class }}">
       {{ $slot }}
     </section>
   </main>
