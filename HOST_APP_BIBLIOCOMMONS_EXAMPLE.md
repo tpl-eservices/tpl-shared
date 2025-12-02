@@ -47,12 +47,12 @@ BIBLIOCOMMONS_API_URL=https://torontopubliclibrary.bibliocommons.com/api/externa
 **After (with package layout):**
 ```blade
 {{-- resources/views/welcome.blade.php --}}
-<x-tpl-shared::static-layout>
+<x-tpl-shared-static-layout>
     <div class="py-12">
         <h1>Welcome</h1>
         <p>Content here</p>
     </div>
-</x-tpl-shared::static-layout>
+</x-tpl-shared-static-layout>
 ```
 
 ### 4. Test It
@@ -110,7 +110,7 @@ Route::get('/about', function () {
 ### View: Welcome Page
 ```blade
 {{-- resources/views/welcome.blade.php --}}
-<x-tpl-shared::static-layout>
+<x-tpl-shared-static-layout>
     <div class="space-y-12 py-16">
         {{-- Hero Section --}}
         <div class="text-center">
@@ -140,7 +140,7 @@ Route::get('/about', function () {
             </div>
         </div>
     </div>
-</x-tpl-shared::static-layout>
+</x-tpl-shared-static-layout>
 ```
 
 ### View: About Page (with custom width)
@@ -167,7 +167,7 @@ Route::get('/about', function () {
             across the city.
         </p>
     </article>
-</x-tpl-shared::static-layout>
+</x-tpl-shared-static-layout>
 ```
 
 ---
@@ -177,9 +177,9 @@ Route::get('/about', function () {
 ### App Layout
 ```blade
 {{-- resources/views/app.blade.php --}}
-<x-tpl-shared::layout>
+<x-tpl-shared-layout>
     @inertia
-</x-tpl-shared::layout>
+</x-tpl-shared-layout>
 ```
 
 ### React Page Component
@@ -222,7 +222,7 @@ export default function Welcome() {
     <div class="max-w-4xl mx-auto px-4 py-12">
         <p>Your content here...</p>
     </div>
-</x-tpl-shared::static-layout>
+</x-tpl-shared-static-layout>
 ```
 
 ### Example 2: Multiple Sections with Different Widths
@@ -242,13 +242,13 @@ export default function Welcome() {
             {{-- Article content --}}
         </article>
     </div>
-</x-tpl-shared::static-layout>
+</x-tpl-shared-static-layout>
 ```
 
 ### Example 3: With Custom Scripts
 
 ```blade
-<x-tpl-shared::static-layout>
+<x-tpl-shared-static-layout>
     <div class="py-12">
         <h1>Page with Custom JS</h1>
         <button id="my-button">Click Me</button>
@@ -261,7 +261,7 @@ export default function Welcome() {
             });
         </script>
     </x-slot:scripts>
-</x-tpl-shared::static-layout>
+</x-tpl-shared-static-layout>
 ```
 
 ---
@@ -407,7 +407,7 @@ public function health()
 ## Next Steps
 
 1. ✅ Configure `services.bibliocommons` and `.env`
-2. ✅ Replace your layouts with `<x-tpl-shared::static-layout>`
+2. ✅ Replace your layouts with `<x-tpl-shared-static-layout>`
 3. ✅ Test locally
 4. ✅ Deploy to staging
 5. ✅ Verify production works

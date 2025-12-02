@@ -2,9 +2,12 @@
 
 namespace Tpl\Shared;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Tpl\Shared\Services\BiblioCommonsTemplateService;
+use Tpl\Shared\View\Components\Layout;
+use Tpl\Shared\View\Components\StaticLayout;
 use Tpl\Shared\View\Composers\BiblioCommonsComposer;
 
 class SharedServiceProvider extends ServiceProvider
@@ -30,6 +33,10 @@ class SharedServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'tpl-shared');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
+        // Register Blade components
+        Blade::component('tpl-shared-layout', Layout::class);
+        Blade::component('tpl-shared-static-layout', StaticLayout::class);
 
         // Register BiblioCommons view composer for layout components
         View::composer([

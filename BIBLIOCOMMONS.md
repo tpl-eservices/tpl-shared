@@ -52,17 +52,17 @@ The package provides two layout components with BiblioCommons integration:
 
 ```blade
 {{-- In your host app's Blade files --}}
-<x-tpl-shared::layout>
+<x-tpl-shared-layout>
     <div>Your content here</div>
-</x-tpl-shared::layout>
+</x-tpl-shared-layout>
 ```
 
 Or for static layouts:
 
 ```blade
-<x-tpl-shared::static-layout>
+<x-tpl-shared-static-layout>
     <div>Your content here</div>
-</x-tpl-shared::static-layout>
+</x-tpl-shared-static-layout>
 ```
 
 #### Option B: Publish and Customize Views
@@ -79,9 +79,9 @@ Then use them:
 
 ```blade
 {{-- Using published views --}}
-<x-tpl-shared::layout>
+<x-tpl-shared-layout>
     <div>Your content here</div>
-</x-tpl-shared::layout>
+</x-tpl-shared-layout>
 ```
 
 ### Step 3: Register View Composer in Your AppServiceProvider (Optional)
@@ -171,12 +171,12 @@ Both layout components include:
 
 ```blade
 {{-- resources/views/welcome.blade.php --}}
-<x-tpl-shared::static-layout>
+<x-tpl-shared-static-layout>
     <div class="py-12">
         <h1 class="text-4xl font-bold">Welcome to Our Library</h1>
         <p>Your content here...</p>
     </div>
-</x-tpl-shared::static-layout>
+</x-tpl-shared-static-layout>
 ```
 
 ### Example 2: Custom Container Width
@@ -184,16 +184,16 @@ Both layout components include:
 ```blade
 <x-tpl-shared::static-layout class="max-w-7xl mx-auto px-4">
     <div>Wide container content</div>
-</x-tpl-shared::static-layout>
+</x-tpl-shared-static-layout>
 ```
 
 ### Example 3: With Inertia.js (if using layout component)
 
 ```blade
 {{-- resources/views/components/layout.blade.php (published) --}}
-<x-tpl-shared::layout>
+<x-tpl-shared-layout>
     @inertia
-</x-tpl-shared::layout>
+</x-tpl-shared-layout>
 ```
 
 ### Example 4: Clearing Cache
@@ -421,7 +421,7 @@ test('layout renders with bibliocommons data', function () {
 
 ✅ **Host app needs to:**
 1. Configure API URL in `config/services.php`
-2. Use `<x-tpl-shared::static-layout>` or `<x-tpl-shared::layout>`
+2. Use `<x-tpl-shared-static-layout>` or `<x-tpl-shared-layout>`
 3. Optionally publish views for customization
 
 ✅ **Benefits:**
@@ -436,7 +436,7 @@ test('layout renders with bibliocommons data', function () {
 
 - [ ] Add BiblioCommons API URL to `config/services.php`
 - [ ] Add `BIBLIOCOMMONS_API_URL` to `.env`
-- [ ] Use `<x-tpl-shared::static-layout>` in your Blade files
+- [ ] Use `<x-tpl-shared-static-layout>` in your Blade files
 - [ ] Test that header/footer appear
 - [ ] Clear cache if needed: `Cache::forget('bibliocommons_templates')`
 
