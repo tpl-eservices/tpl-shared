@@ -20,6 +20,11 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+
+# Development-only config files (not published to host apps)
+/config-dev/*.php
+!/config-dev/README.md
+yarn-error.log
 /auth.json
 /.fleet
 /.idea
