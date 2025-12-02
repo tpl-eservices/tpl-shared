@@ -3,13 +3,20 @@
     "description": "Shared package for multiple Laravel apps",
     "type": "library",
     "license": "proprietary",
+    "version": "0.1.0",
     "require": {
         "php": "^8.4",
         "laravel/framework": "^12.0"
     },
     "require-dev": {
         "pestphp/pest": "^4.0",
-        "laravel/pint": "^1.0"
+        "laravel/pint": "^1.0",
+        "orchestra/testbench": "^10.0"
+    },
+    "scripts": {
+        "test": "pest",
+        "format": "pint",
+        "format:check": "pint --test"
     },
     "autoload": {
         "psr-4": {
@@ -18,7 +25,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tpl\\Shared\\Tests\\": "tests/"
+            "Tpl\\Shared\\Tests\\": "tests/",
+            "Tests\\": "tests/"
         }
     },
     "extra": {
