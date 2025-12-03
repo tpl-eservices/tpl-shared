@@ -1,3 +1,8 @@
+@props([
+    'center' => false,
+    'class' => 'max-w-4xl mb-10 mt-10 mx-auto px-5 lg:px-0',
+])
+
 <!DOCTYPE html>
 <html class="h-full" lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['dark'=> ($appearance ?? 'system') == 'dark'])>
 

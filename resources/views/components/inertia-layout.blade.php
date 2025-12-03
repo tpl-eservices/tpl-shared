@@ -45,7 +45,7 @@
   @endif
 
   <main class="grow">
-    @inertia
+    {{ $slot }}
   </main>
 
   {{-- BiblioCommons Footer --}}
