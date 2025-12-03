@@ -12,9 +12,12 @@ help:
 	@echo "  make tag-patch    - Create a new patch version (0.1.0 -> 0.1.1)"
 	@echo "  make tag-minor    - Create a new minor version (0.1.0 -> 0.2.0)"
 	@echo "  make tag-major    - Create a new major version (0.1.0 -> 1.0.0)"
+	@echo "                      Note: Version files are auto-updated on tagging"
 	@echo ""
 	@echo "  make push         - Push commits and tags to GitHub"
 	@echo "  make release      - Full release: test, format, commit, tag-patch, and push"
+	@echo ""
+	@echo "  make update-version - Manually update composer.json/package.json from latest tag"
 	@echo ""
 	@echo "Current version: $$(git describe --tags --abbrev=0 2>/dev/null || echo 'No tags yet')"
 
@@ -78,14 +81,30 @@ _create-tag:
 		NEW_VERSION="$$MAJOR.$$MINOR.$$((PATCH + 1))"; \
 	fi; \
 	echo "New version: v$$NEW_VERSION"; \
+	echo ""; \
 	read -p "Enter release notes (or press Enter for auto-generated): " NOTES; \
 	if [ -z "$$NOTES" ]; then \
 		NOTES="Release v$$NEW_VERSION"; \
 	fi; \
+	echo ""; \
+	echo "Creating tag v$$NEW_VERSION..."; \
 	git tag -a "v$$NEW_VERSION" -m "$$NOTES"; \
 	echo "✅ Created tag v$$NEW_VERSION"; \
 	echo ""; \
-	echo "Run 'make push' to push to GitHub"
+	echo "Updating version files..."; \
+	sed -i '' 's/"version": "[^"]*"/"version": "'$$NEW_VERSION'"/' composer.json 2>/dev/null && echo "  ✅ Updated composer.json" || true; \
+	sed -i '' 's/"version": "[^"]*"/"version": "'$$NEW_VERSION'"/' package.json 2>/dev/null && echo "  ✅ Updated package.json" || true; \
+	if [ -n "$$(git status --porcelain)" ]; then \
+		echo ""; \
+		echo "Committing version updates..."; \
+		git add composer.json package.json; \
+		git commit -m "Bump version to $$NEW_VERSION"; \
+		echo "✅ Committed version updates"; \
+	fi; \
+	echo ""; \
+	echo "Next steps:"; \
+	echo "  1. Run 'make push' to push to GitHub"; \
+	echo "  2. Or run 'make release' to do everything automatically"
 
 # Push commits and tags to GitHub
 push:
@@ -129,14 +148,26 @@ release:
 	@echo ""
 	@echo "New version: $$(git describe --tags --abbrev=0)"
 
-# Update version in composer.json
+# Update version in composer.json and package.json
 update-version:
-	@CURRENT=$$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0"); \
+	@if [ -z "$$(git describe --tags --abbrev=0 2>/dev/null)" ]; then \
+		echo "Error: No tags found. Create a tag first with 'make tag-patch'."; \
+		exit 1; \
+	fi
+	@CURRENT=$$(git describe --tags --abbrev=0); \
 	VERSION=$$(echo $$CURRENT | sed 's/^v//'); \
-	echo "Updating composer.json version to $$VERSION..."; \
-	sed -i '' 's/"version": "[^"]*"/"version": "'$$VERSION'"/' composer.json; \
-	sed -i '' 's/"version": "[^"]*"/"version": "'$$VERSION'"/' package.json; \
-	echo "✅ Updated version files"
+	echo "Updating version to $$VERSION..."; \
+	if [ -f composer.json ]; then \
+		sed -i '' 's/"version": "[^"]*"/"version": "'$$VERSION'"/' composer.json && \
+		echo "  ✅ Updated composer.json"; \
+	fi; \
+	if [ -f package.json ]; then \
+		sed -i '' 's/"version": "[^"]*"/"version": "'$$VERSION'"/' package.json && \
+		echo "  ✅ Updated package.json"; \
+	fi; \
+	echo ""; \
+	echo "Version files updated to $$VERSION"; \
+	echo "Run 'git add -A && git commit -m \"Bump version to $$VERSION\"' to commit changes"
 
 # Clean up
 clean:
