@@ -216,7 +216,7 @@ return [
 
 **`.env`:**
 ```env
-BIBLIOCOMMONS_API_URL=https://torontopubliclibrary.bibliocommons.com/api/external-templates
+BIBLIOCOMMONS_API_URL=https://tpl.bibliocommons.com/widgets/external_templates.json
 ```
 
 ### 2. Create App Layout

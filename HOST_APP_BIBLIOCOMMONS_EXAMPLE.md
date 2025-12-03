@@ -26,7 +26,7 @@ return [
 **Edit `.env`:**
 ```env
 # Add this line (replace with your actual BiblioCommons API URL)
-BIBLIOCOMMONS_API_URL=https://torontopubliclibrary.bibliocommons.com/api/external-templates
+BIBLIOCOMMONS_API_URL=https://tpl.bibliocommons.com/api/external-templates
 ```
 
 ### 3. Update Your Views
@@ -81,7 +81,7 @@ php artisan tinker
 ```php
 // Check config
 config('services.bibliocommons.external_templates_url')
-// Should output: "https://torontopubliclibrary.bibliocommons.com/..."
+// Should output: "https://tpl.bibliocommons.com/..."
 
 // Check cached data
 Cache::get('bibliocommons_templates')
