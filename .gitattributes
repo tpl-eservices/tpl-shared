@@ -20,3 +20,4 @@
 /pnpm-workspace.yaml export-ignore
 /package.json export-ignore
 /README.md export-ignore
+/public/build/* export-ignore
