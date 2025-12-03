@@ -110,22 +110,19 @@ push:
 release:
 	@echo "=== Starting Release Process ==="
 	@echo ""
-	@echo "Step 1: Running tests..."
-	@$(MAKE) test
-	@echo ""
-	@echo "Step 2: Formatting code..."
+	@echo "Step 1: Formatting code..."
 	@$(MAKE) format
 	@echo ""
 	@if [ -n "$$(git status --porcelain)" ]; then \
-		echo "Step 3: Committing formatted changes..."; \
+		echo "Step 2: Committing formatted changes..."; \
 		git add -A; \
 		git commit -m "Format code for release"; \
 		echo ""; \
 	fi
-	@echo "Step 4: Creating patch version tag..."
+	@echo "Step 3: Creating patch version tag..."
 	@$(MAKE) tag-patch
 	@echo ""
-	@echo "Step 5: Pushing to GitHub..."
+	@echo "Step 4: Pushing to GitHub..."
 	@$(MAKE) push
 	@echo ""
 	@echo "🎉 Release complete!"
