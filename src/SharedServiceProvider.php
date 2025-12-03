@@ -51,7 +51,7 @@ class SharedServiceProvider extends ServiceProvider
         ]);
 
         $this->publishes([
-            __DIR__.'/../../public/build' => public_path('vendor/tpl-shared/build'),
+            __DIR__.'/public/build' => public_path('vendor/tpl-shared/build'),
         ], 'tpl-shared-assets');
 
         // Publish migrations
