@@ -50,6 +50,10 @@ class SharedServiceProvider extends ServiceProvider
             __DIR__.'/../resources/css' => resource_path('vendor/tpl-shared/css'),
         ]);
 
+        $this->publishes([
+            __DIR__.'/../../public/build' => public_path('vendor/tpl-shared/build'),
+        ], 'tpl-shared-assets');
+
         // Publish migrations
         //    $this->publishesMigrations([
         //      __DIR__.'/../database/migrations' => database_path('migrations'),
