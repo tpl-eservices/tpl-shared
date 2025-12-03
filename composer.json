@@ -3,7 +3,7 @@
     "description": "Shared package for multiple Laravel apps",
     "type": "library",
     "license": "proprietary",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "require": {
         "php": "^8.4",
         "laravel/framework": "^12.0"
