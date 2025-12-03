@@ -87,10 +87,6 @@ _create-tag:
 		NOTES="Release v$$NEW_VERSION"; \
 	fi; \
 	echo ""; \
-	echo "Creating tag v$$NEW_VERSION..."; \
-	git tag -a "v$$NEW_VERSION" -m "$$NOTES"; \
-	echo "✅ Created tag v$$NEW_VERSION"; \
-	echo ""; \
 	echo "Updating version files..."; \
 	sed -i '' 's/"version": "[^"]*"/"version": "'$$NEW_VERSION'"/' composer.json 2>/dev/null && echo "  ✅ Updated composer.json" || true; \
 	sed -i '' 's/"version": "[^"]*"/"version": "'$$NEW_VERSION'"/' package.json 2>/dev/null && echo "  ✅ Updated package.json" || true; \
@@ -100,7 +96,11 @@ _create-tag:
 		git add composer.json package.json; \
 		git commit -m "Bump version to $$NEW_VERSION"; \
 		echo "✅ Committed version updates"; \
+		echo ""; \
 	fi; \
+	echo "Creating tag v$$NEW_VERSION..."; \
+	git tag -a "v$$NEW_VERSION" -m "$$NOTES"; \
+	echo "✅ Created tag v$$NEW_VERSION"; \
 	echo ""; \
 	echo "Next steps:"; \
 	echo "  1. Run 'make push' to push to GitHub"; \
