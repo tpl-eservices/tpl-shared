@@ -17,7 +17,9 @@
     {!! $bibliocommons['css'] !!}
   @endif
 
-  <link rel="stylesheet" href="{{ asset('vendor/tpl-shared/build/assets/app.css') }}">
+  @if (tplSharedAsset('css'))
+      <link rel="stylesheet" href="{{ tplSharedAsset('css') }}">
+  @endif
 
   @stack('head')
 </head>

@@ -15,6 +15,10 @@
     href="https://fonts.bunny.net/css?family=Playfair+Display|IBM+Plex+Sans+Condensed:600|Roboto:400,900|Open+Sans:400,500,700"
     rel="stylesheet" />
 
+  @if (tplSharedAsset('css'))
+    <link rel="stylesheet" href="{{ tplSharedAsset('css') }}">
+  @endif
+
   {{-- BiblioCommons CSS (Link Tags) --}}
   @if (!empty($bibliocommons['css']))
     {!! $bibliocommons['css'] !!}

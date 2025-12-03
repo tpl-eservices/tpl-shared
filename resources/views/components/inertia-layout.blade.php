@@ -22,10 +22,9 @@
     {!! $bibliocommons['css'] !!}
   @endif
 
-  @vite(['resources/css/app.css'])
-  @viteReactRefresh
-  @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
-  @inertiaHead
+  @if (tplSharedAsset('css'))
+    <link rel="stylesheet" href="{{ tplSharedAsset('css') }}">
+  @endif
 
   @stack('head')
 </head>

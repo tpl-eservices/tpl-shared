@@ -24,7 +24,9 @@
   {!! $bibliocommons['css'] !!}
   @endif
 
-  @vite(['resources/css/app.css'])
+  @if (tplSharedAsset('css'))
+    <link rel="stylesheet" href="{{ tplSharedAsset('css') }}">
+  @endif
 </head>
 
 <body class="min-h-full flex flex-col font-sans antialiased registration" id="registration">
