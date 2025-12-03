@@ -1,4 +1,4 @@
-.PHONY: help tag-patch tag-minor tag-major push release status test format
+.PHONY: help tag-patch tag-minor tag-major push release status test format build
 
 # Default target
 help:
@@ -8,6 +8,7 @@ help:
 	@echo "  make status       - Show current version and git status"
 	@echo "  make test         - Run tests before releasing"
 	@echo "  make format       - Format code with Laravel Pint"
+	@echo "  make build        - Build frontend assets with Vite"
 	@echo ""
 	@echo "  make tag-patch    - Create a new patch version (0.1.0 -> 0.1.1)"
 	@echo "  make tag-minor    - Create a new minor version (0.1.0 -> 0.2.0)"
@@ -44,6 +45,15 @@ test:
 format:
 	@echo "Formatting PHP code with Pint..."
 	@composer format
+
+# Build frontend assets
+build:
+	@echo "Building frontend assets with Vite..."
+	@if command -v pnpm >/dev/null 2>&1; then \
+		pnpm build; \
+	else \
+		npm run build; \
+	fi
 
 # Create a patch version tag (0.1.0 -> 0.1.1)
 tag-patch:
@@ -138,10 +148,13 @@ release:
 		git commit -m "Format code for release"; \
 		echo ""; \
 	fi
-	@echo "Step 3: Creating patch version tag..."
+	@echo "Step 3: Building frontend assets..."
+	@$(MAKE) build
+	@echo ""
+	@echo "Step 4: Creating patch version tag..."
 	@$(MAKE) tag-patch
 	@echo ""
-	@echo "Step 4: Pushing to GitHub..."
+	@echo "Step 5: Pushing to GitHub..."
 	@$(MAKE) push
 	@echo ""
 	@echo "🎉 Release complete!"
@@ -183,4 +196,3 @@ install:
 	@composer install
 	@pnpm install
 	@echo "✅ Dependencies installed"
-

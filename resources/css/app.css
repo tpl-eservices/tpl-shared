@@ -29,12 +29,8 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
   body {
-    @apply h-full font-sans text-base antialiased bg-background text-foreground;
+    @apply h-full font-sans text-base antialiased;
   }
 
   a {
