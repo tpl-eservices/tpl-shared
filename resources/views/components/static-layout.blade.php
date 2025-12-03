@@ -17,7 +17,7 @@
     {!! $bibliocommons['css'] !!}
   @endif
 
-  @vite(['resources/css/app.css'])
+  <link rel="stylesheet" href="{{ asset('vendor/tpl-shared/build/assets/app.css') }}">
 
   @stack('head')
 </head>
