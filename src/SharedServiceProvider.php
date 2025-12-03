@@ -40,6 +40,7 @@ class SharedServiceProvider extends ServiceProvider
         View::composer([
             'tpl-shared::components.layout',
             'tpl-shared::components.static-layout',
+            'tpl-shared::components.inertia-layout',
         ], BiblioCommonsComposer::class);
 
         // Publish frontend assets (JS/CSS)
