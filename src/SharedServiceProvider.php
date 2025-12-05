@@ -5,6 +5,7 @@ namespace Tpl\Shared;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Tpl\Shared\Console\Commands\ClearBiblioCommonsCache;
 use Tpl\Shared\Services\BiblioCommonsTemplateService;
 use Tpl\Shared\View\Components\Layout;
 use Tpl\Shared\View\Composers\BiblioCommonsComposer;
@@ -42,6 +43,13 @@ class SharedServiceProvider extends ServiceProvider
             'tpl-shared::components.static-layout',
             'tpl-shared::components.inertia-layout',
         ], BiblioCommonsComposer::class);
+
+        // Register ClearBiblioCommonsCache command
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                ClearBiblioCommonsCache::class,
+            ]);
+        }
 
         // Publish frontend assets (JS/CSS)
         $this->publishes([

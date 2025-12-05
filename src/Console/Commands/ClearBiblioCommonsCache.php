@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Tpl\Shared\Console\Commands;
 
-use App\Services\BiblioCommonsTemplateService;
 use Illuminate\Console\Command;
+use Tpl\Shared\Services\BiblioCommonsTemplateService;
 
 class ClearBiblioCommonsCache extends Command
 {
