@@ -17,7 +17,7 @@ class BiblioGuard implements Guard
 
     protected BiblioSsoService $biblioSso;
 
-    protected string $cookieName = 'biblioSession';
+    protected string $cookieName = 'bc_session';
 
     public function __construct(
         UserProvider $provider,
