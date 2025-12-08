@@ -29,29 +29,16 @@ class BiblioSsoService
             // Correct endpoint per documentation: /v1/sessions/{id} (no library_id in path)
             $url = "{$this->biblioApiBaseUrl}/v1/sessions/{$sessionId}";
 
-            Log::info('BiblioCommons: Validating session', [
-                'url' => $url,
-                'session_id' => $sessionId,
-            ]);
-
-            $response = Http::timeout(5)
-                ->retry(2, 500, throw: false)
-                ->withoutVerifying() // Disable SSL verification for local development
+            $response = Http::timeout(10)
+                ->retry(1, 100, throw: false)
+                ->withoutVerifying()
                 ->get($url, [
                     'api_key' => $this->apiKey,
                 ]);
 
-            Log::info('BiblioCommons: Session API response', [
-                'status' => $response->status(),
-                'successful' => $response->successful(),
-                'body' => $response->body(),
-                'json' => $response->json(),
-            ]);
-
             if (! $response->successful()) {
                 Log::warning('BiblioCommons session validation failed', [
                     'status' => $response->status(),
-                    'response' => $response->json(),
                     'url' => $url,
                 ]);
 
@@ -62,7 +49,7 @@ class BiblioSsoService
         } catch (\Exception $e) {
             Log::error('BiblioCommons session validation error', [
                 'message' => $e->getMessage(),
-                'session_id' => $sessionId,
+                'session_id' => substr($sessionId, 0, 20).'...',
             ]);
 
             return null;
@@ -77,18 +64,17 @@ class BiblioSsoService
         try {
             $url = "{$this->biblioApiBaseUrl}/v1/libraries/{$this->libraryId}/borrowers/{$borrowerId}";
 
-            $response = Http::timeout(5)
-                ->retry(2, 500, throw: false)
-                ->withoutVerifying() // Disable SSL verification for local development
+            $response = Http::timeout(10)
+                ->retry(1, 100, throw: false)
+                ->withoutVerifying()
                 ->get($url, [
                     'api_key' => $this->apiKey,
                 ]);
 
-            if (! $response->successful() || ! $response['successful']) {
+            if (! $response->successful()) {
                 Log::warning('BiblioCommons fetching borrower info failed', [
                     'status' => $response->status(),
-                    'response' => $response->json(),
-                    'url' => $url,
+                    'borrower_id' => $borrowerId,
                 ]);
 
                 return null;
