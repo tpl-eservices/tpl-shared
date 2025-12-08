@@ -26,7 +26,7 @@ $borrower['user']['id']
 }
 
 // So we need:
-$sessionData['session']['borrower']['id']
+$sessionData['session']['id']
 ```
 
 ---
@@ -35,12 +35,12 @@ $sessionData['session']['borrower']['id']
 
 ### 1. BiblioGuard.php ✅
 **Changes:**
-- `user()` method: Changed `$sessionData['user']['id']` → `$sessionData['session']['borrower']['id']`
-- `validate()` method: Changed `$sessionData['user']['id']` → `$sessionData['session']['borrower']['id']`
+- `user()` method: Changed `$sessionData['user']['id']` → `$sessionData['session']['id']`
+- `validate()` method: Changed `$sessionData['user']['id']` → `$sessionData['session']['id']`
 
 ### 2. BiblioSsoService.php ✅
 **Changes:**
-- `fetchUserProfile()` method: Changed `$borrower['user']['id']` → `$sessionData['session']['borrower']['id']`
+- `fetchUserProfile()` method: Changed `$borrower['user']['id']` → `$sessionData['session']['id']`
 - Updated comments to reflect correct API structure
 
 ---
