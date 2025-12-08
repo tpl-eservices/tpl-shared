@@ -108,26 +108,21 @@ class BiblioSsoService
     /**
      * Fetch user profile by validating session and retrieving borrower info.
      *
-     * Per documentation:
-     * 1. Call /v1/sessions/{id} to get user info and borrowers hash
-     * 2. Extract borrower ID from the borrowers hash using library_id
-     * 3. Call /v1/libraries/{library_id}/borrowers/{id} to get full borrower info
+     * Actual API response structure (based on working implementation):
+     * {
+     *     "session": {
+     *         "borrowers": {
+     *             "tpl": "123456"
+     *         }
+     *     }
+     * }
      */
     public function fetchUserProfile(string $sessionId): ?array
     {
-        // Validate session to get user info
+        // Validate session to get borrowers info
         $sessionData = $this->validateSession($sessionId);
 
-        // Sessions API response structure per documentation:
-        // {
-        //     "user": {
-        //         "id": "2412321",
-        //         "name": "exampleuser",
-        //         "borrowers": {"examplepl": "123456"}
-        //     }
-        // }
-
-        if (! $sessionData || ! isset($sessionData['user']['borrowers'][$this->libraryId])) {
+        if (! $sessionData || ! isset($sessionData['session']['borrowers'][$this->libraryId])) {
             Log::warning('BiblioCommons: No borrower ID found for library', [
                 'library_id' => $this->libraryId,
                 'session_data' => $sessionData,
@@ -137,7 +132,7 @@ class BiblioSsoService
         }
 
         // Get borrower ID from the borrowers hash using our library_id
-        $borrowerId = $sessionData['user']['borrowers'][$this->libraryId];
+        $borrowerId = $sessionData['session']['borrowers'][$this->libraryId];
 
         return $this->fetchBorrowerInfo($borrowerId);
     }

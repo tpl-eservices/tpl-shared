@@ -49,15 +49,15 @@ class BiblioGuard implements Guard
         // Validate session and get user data from BiblioCommons
         $sessionData = $this->biblioSso->validateSession($sessionId);
 
-        // BiblioCommons Sessions API returns: { "user": { "id": "...", "borrowers": {"tpl": "123456"} } }
+        // Actual BiblioCommons API response: { "session": { "borrowers": {"tpl": "123456"} } }
         $libraryId = config('services.bibliocommons.library_id', 'tpl');
 
-        if (! $sessionData || ! isset($sessionData['user']['borrowers'][$libraryId])) {
+        if (! $sessionData || ! isset($sessionData['session']['borrowers'][$libraryId])) {
             return null;
         }
 
         // Get borrower ID from the borrowers hash using library_id as key
-        $borrowerId = $sessionData['user']['borrowers'][$libraryId];
+        $borrowerId = $sessionData['session']['borrowers'][$libraryId];
 
         return $this->user = $this->provider->retrieveById($borrowerId);
     }
@@ -76,12 +76,12 @@ class BiblioGuard implements Guard
 
         $libraryId = config('services.bibliocommons.library_id', 'tpl');
 
-        if (! $sessionData || ! isset($sessionData['user']['borrowers'][$libraryId])) {
+        if (! $sessionData || ! isset($sessionData['session']['borrowers'][$libraryId])) {
             return false;
         }
 
         // Check if we can retrieve user by borrower ID
-        $borrowerId = $sessionData['user']['borrowers'][$libraryId];
+        $borrowerId = $sessionData['session']['borrowers'][$libraryId];
 
         return $this->provider->retrieveById($borrowerId) !== null;
     }
