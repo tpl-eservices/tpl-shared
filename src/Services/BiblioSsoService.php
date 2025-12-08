@@ -98,23 +98,24 @@ class BiblioSsoService
      */
     public function fetchUserProfile(string $sessionId): ?array
     {
-        // Validate session to get user info
-        $borrower = $this->validateSession($sessionId);
+        // Validate session to get borrower info
+        $sessionData = $this->validateSession($sessionId);
 
-        // Example response structure (commented for reference):
-        // $borrower = [
-        //     "user" => [
-        //       "id" => "2412321",
-        //       "name" => "exampleuser",
-        //       "borrowers" => ["examplepl" => "123456"]
-        //     ]
-        // ];
+        // BiblioCommons API response structure:
+        // {
+        //     "session": {
+        //         "borrower": {
+        //             "id": "2412321",
+        //             ...
+        //         }
+        //     }
+        // }
 
-        if (! $borrower || ! isset($borrower['user']['id'])) {
+        if (! $sessionData || ! isset($sessionData['session']['borrower']['id'])) {
             return null;
         }
 
-        $borrowerId = $borrower['user']['id']; // or $borrower['user']['borrowers']['examplepl'];
+        $borrowerId = $sessionData['session']['borrower']['id'];
 
         return $this->fetchBorrowerInfo($borrowerId);
     }

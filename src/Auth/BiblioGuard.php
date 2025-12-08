@@ -49,12 +49,13 @@ class BiblioGuard implements Guard
         // Validate session and get user data from BiblioCommons
         $sessionData = $this->biblioSso->validateSession($sessionId);
 
-        if (! $sessionData || ! isset($sessionData['user']['id'])) {
+        // BiblioCommons API returns: { "session": { "borrower": { "id": "..." } } }
+        if (! $sessionData || ! isset($sessionData['session']['borrower']['id'])) {
             return null;
         }
 
         // Retrieve user by borrower ID from BiblioCommons API
-        $borrowerId = $sessionData['user']['id'];
+        $borrowerId = $sessionData['session']['borrower']['id'];
 
         return $this->user = $this->provider->retrieveById($borrowerId);
     }
@@ -71,12 +72,12 @@ class BiblioGuard implements Guard
         // Validate session with BiblioCommons
         $sessionData = $this->biblioSso->validateSession($credentials['biblio_session_id']);
 
-        if (! $sessionData || ! isset($sessionData['user']['id'])) {
+        if (! $sessionData || ! isset($sessionData['session']['borrower']['id'])) {
             return false;
         }
 
         // Check if we can retrieve user by borrower ID
-        $borrowerId = $sessionData['user']['id'];
+        $borrowerId = $sessionData['session']['borrower']['id'];
 
         return $this->provider->retrieveById($borrowerId) !== null;
     }
