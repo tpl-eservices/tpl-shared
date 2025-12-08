@@ -26,16 +26,21 @@ class BiblioSsoService
     public function validateSession(string $sessionId): ?array
     {
         try {
+            // Correct endpoint: /v1/libraries/{library_id}/sessions/{session_id}
+            $url = "{$this->biblioApiBaseUrl}/v1/libraries/{$this->libraryId}/sessions/{$sessionId}";
+
             $response = Http::timeout(5)
                 ->retry(2, 500, throw: false)
                 ->withoutVerifying() // Disable SSL verification for local development
-                ->get("{$this->biblioApiBaseUrl}/v1/sessions/{$sessionId}?api_key={$this->apiKey}");
+                ->get($url, [
+                    'api_key' => $this->apiKey,
+                ]);
 
             if (! $response->successful()) {
                 Log::warning('BiblioCommons session validation failed', [
                     'status' => $response->status(),
                     'response' => $response->json(),
-                    'url' => "{$this->biblioApiBaseUrl}/v1/sessions/{$sessionId}?api_key={$this->apiKey}",
+                    'url' => $url,
                 ]);
 
                 return null;
@@ -58,16 +63,20 @@ class BiblioSsoService
     public function fetchBorrowerInfo(string $borrowerId): ?array
     {
         try {
+            $url = "{$this->biblioApiBaseUrl}/v1/libraries/{$this->libraryId}/borrowers/{$borrowerId}";
+
             $response = Http::timeout(5)
                 ->retry(2, 500, throw: false)
                 ->withoutVerifying() // Disable SSL verification for local development
-                ->get("{$this->biblioApiBaseUrl}/v1/libraries/{$this->libraryId}/borrowers/{$borrowerId}?api_key={$this->apiKey}");
+                ->get($url, [
+                    'api_key' => $this->apiKey,
+                ]);
 
             if (! $response->successful() || ! $response['successful']) {
                 Log::warning('BiblioCommons fetching borrower info failed', [
                     'status' => $response->status(),
                     'response' => $response->json(),
-                    'url' => "{$this->biblioApiBaseUrl}/v1/libraries/{$this->libraryId}/borrowers/{$borrowerId}?api_key={$this->apiKey}",
+                    'url' => $url,
                 ]);
 
                 return null;
