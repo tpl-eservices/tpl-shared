@@ -8,99 +8,112 @@ use Tpl\Shared\Services\BiblioSsoService;
 
 class BiblioUserProvider implements UserProvider
 {
+    protected string $apiUrl;
+
+    protected string $apiKey;
+
+    protected string $libraryId;
+
     public function __construct(
         protected BiblioSsoService $biblioSso,
         protected string $model
-    ) {}
+    ) {
+        $this->apiUrl = config('services.bibliocommons.api_base_url', 'https://api.bibliocommons.com');
+        $this->apiKey = config('services.bibliocommons.api_key');
+        $this->libraryId = config('services.bibliocommons.library_id', 'tpl');
+    }
 
     /**
-     * Retrieve a user by their unique identifier.
+     * Retrieve a user by their unique identifier (borrower ID).
+     *
+     * Fetches fresh data from BiblioCommons API each time.
      */
     public function retrieveById($identifier): ?Authenticatable
     {
-        return $this->createModel()->newQuery()->find($identifier);
+        // $identifier is the BiblioCommons borrower ID
+        // Fetch fresh data from API
+        $borrowerInfo = $this->biblioSso->fetchBorrowerInfo($identifier);
+
+        if (! $borrowerInfo || ! isset($borrowerInfo['borrower'])) {
+            return null;
+        }
+
+        return $this->createUserFromApiData($borrowerInfo['borrower']);
     }
 
     /**
      * Retrieve a user by their unique identifier and "remember me" token.
+     *
+     * Not used for SSO - session management is external.
      */
     public function retrieveByToken($identifier, $token): ?Authenticatable
     {
-        $model = $this->createModel();
-
-        return $model->newQuery()
-            ->where($model->getAuthIdentifierName(), $identifier)
-            ->where($model->getRememberTokenName(), $token)
-            ->first();
+        return null;
     }
 
     /**
      * Update the "remember me" token for the given user in storage.
+     *
+     * No database storage - session management is external.
      */
     public function updateRememberToken(Authenticatable $user, $token): void
     {
-        $user->setRememberToken($token);
-        $user->save();
+        // No database storage, do nothing
     }
 
     /**
      * Retrieve a user by the given credentials.
      *
-     * This method validates the BiblioCommons session and fetches user data.
+     * Not used since we don't store users in database.
      */
     public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
-        if (! isset($credentials['biblio_session_id'])) {
-            return null;
-        }
-
-        // Fetch user profile from BiblioCommons
-        $profile = $this->biblioSso->fetchUserProfile($credentials['biblio_session_id']);
-
-        if (! $profile || ! isset($profile['borrower'])) {
-            return null;
-        }
-
-        $borrower = $profile['borrower'];
-
-        // Find or create user in local database
-        $model = $this->createModel();
-
-        return $model->newQuery()->firstOrCreate(
-            ['biblio_id' => $borrower['id']],
-            [
-                'name' => $borrower['name'] ?? '',
-                'email' => $borrower['email'] ?? '',
-            ]
-        );
+        return null;
     }
 
     /**
      * Validate a user against the given credentials.
      *
-     * For BiblioCommons, validation happens during retrieval.
+     * For BiblioCommons SSO, validation is handled by BiblioCommons.
      */
     public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
-        // Validation already happened in retrieveByCredentials
+        // Validation is handled by BiblioCommons, not by Laravel
         return true;
     }
 
     /**
      * Rehash the user's password if required and supported.
+     *
+     * Not applicable - no passwords for SSO users.
      */
     public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
     {
-        // Not applicable for BiblioCommons SSO
+        // No passwords for SSO
     }
 
     /**
-     * Create a new instance of the model.
+     * Create a User model instance from BiblioCommons API data.
+     *
+     * Creates a transient user object (not persisted to database).
      */
-    protected function createModel(): Authenticatable
+    protected function createUserFromApiData(array $data): Authenticatable
     {
         $class = '\\'.ltrim($this->model, '\\');
+        $user = new $class;
 
-        return new $class;
+        // Map BiblioCommons borrower data to User model
+        $user->id = $data['id'];
+        $user->name = isset($data['first_name'], $data['last_name'])
+            ? trim($data['first_name'].' '.$data['last_name'])
+            : ($data['name'] ?? 'BiblioCommons User');
+        $user->email = $data['email'] ?? '';
+        $user->password = ''; // No password for SSO users
+        $user->email_verified_at = now(); // Assume verified through BiblioCommons
+
+        // Mark as existing to prevent save attempts
+        $user->exists = true;
+
+        return $user;
     }
 }

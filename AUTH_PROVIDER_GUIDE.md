@@ -4,54 +4,53 @@
 
 The TPL Shared package includes a complete Laravel authentication system for BiblioCommons SSO. This allows host applications to authenticate users via BiblioCommons with minimal configuration—just add a few lines to your `config/auth.php` file!
 
+**Important:** This authentication system is **stateless** - users are **not stored in the database**. User data is fetched fresh from BiblioCommons API on each request. Session management is handled entirely by BiblioCommons.
+
 ## What's Included
 
-- **`BiblioUserProvider`** - Custom user provider that fetches user data from BiblioCommons API
-- **`BiblioGuard`** - Custom guard that reads BiblioCommons session from cookies
-- **Automatic User Creation** - Users are automatically created/updated in your local database
+- **`BiblioUserProvider`** - Custom user provider that fetches user data from BiblioCommons API on every request
+- **`BiblioGuard`** - Custom guard that reads BiblioCommons session from cookies and validates with API
+- **No Database Storage** - Users are transient objects, fresh data on every request
 - **Zero Code Required** - Works with Laravel's standard `Auth` facade
 
 ---
 
-## Quick Start (5 Minutes)
+## Quick Start (3 Minutes)
 
-### 1. Ensure Your User Model Has a `biblio_id` Column
+### 1. User Model Setup
 
-Add a migration if you don't have this column yet:
-
-```bash
-php artisan make:migration add_biblio_id_to_users_table
-```
+Your User model must be configured to work as a **transient model** (no database persistence):
 
 ```php
-public function up()
+// app/Models/User.php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable
 {
-    Schema::table('users', function (Blueprint $table) {
-        $table->string('biblio_id')->unique()->nullable()->after('id');
-    });
+    // No fillable needed - not saving to database
+    protected $fillable = [];
+    
+    // These properties are set dynamically from API
+    public $id;
+    public $name;
+    public $email;
+    public $password;
+    public $email_verified_at;
+    
+    // Mark as existing to prevent save attempts
+    public $exists = true;
+
+    // ...rest of your model
 }
 ```
 
-Run the migration:
+**Note:** No migration needed! Users are fetched from BiblioCommons API only.
 
-```bash
-php artisan migrate
-```
-
-### 2. Make Your User Model Fillable
-
-Update your `User` model:
-
-```php
-protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'biblio_id', // Add this
-];
-```
-
-### 3. Configure Authentication
+### 2. Configure Authentication
 
 Add to your `config/auth.php`:
 
@@ -125,40 +124,67 @@ Users visiting `/auth/biblio/callback` with a valid `biblioSession` cookie will 
 
 ## How It Works
 
-### Authentication Flow
+### Authentication Flow (Stateless)
 
 1. **User visits BiblioCommons** and logs in there
 2. **BiblioCommons sets cookie** (`biblioSession`) in the user's browser
-3. **User visits your app** at `/auth/biblio/callback`
+3. **User visits your app** at any protected route
 4. **BiblioGuard reads cookie** using `CookieUtils::getRaw()`
-5. **BiblioUserProvider validates session** via `BiblioSsoService`
-6. **BiblioUserProvider fetches profile** from BiblioCommons API
-7. **User is created/updated** in local database with `firstOrCreate()`
+5. **BiblioGuard validates session** via `BiblioSsoService::validateSession()`
+6. **BiblioUserProvider fetches profile** from BiblioCommons API using borrower ID
+7. **Transient User object created** from API data (not persisted to database)
 8. **User is authenticated** via Laravel's standard `Auth` facade
 
 ### Architecture
 
 ```
-Request → BiblioGuard → BiblioUserProvider → BiblioSsoService → BiblioCommons API
-                ↓              ↓                     ↓
-          Read Cookie    Find/Create User    Validate & Fetch Profile
-                ↓              ↓                     ↓
-            Auth::user()  ← User Model ← borrower data
+Request → BiblioGuard → Validate Session → Get Borrower ID
+              ↓              ↓                    ↓
+        Read Cookie   BiblioSsoService    BiblioCommons API
+              ↓              ↓                    ↓
+    BiblioUserProvider → Fetch Borrower Info → Create Transient User
+              ↓                                   ↓
+         Auth::user() ← Transient User Object ← API Data (no DB)
 ```
+
+**Key Points:**
+- ✅ No database queries
+- ✅ Fresh data from BiblioCommons API every request
+- ✅ User objects exist only for the duration of the request
+- ✅ Session managed entirely by BiblioCommons
 
 ---
 
 ## Advanced Usage
 
-### Custom User Creation Logic
+### Customizing User Data Mapping
 
-If you need to customize how users are created, extend the `BiblioUserProvider`:
+If you need to customize how API data maps to your User model, extend the `BiblioUserProvider`:
 
 ```php
 namespace App\Auth;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Tpl\Shared\Auth\BiblioUserProvider as BaseProvider;
+
+class CustomBiblioUserProvider extends BaseProvider
+{
+    protected function createUserFromApiData(array $data): Authenticatable
+    {
+        $class = '\\'.ltrim($this->model, '\\');
+        $user = new $class;
+
+        // Custom mapping logic
+        $user->id = $data['id'];
+        $user->name = $data['first_name'] . ' ' . $data['last_name'];
+        $user->email = $data['email'] ?? '';
+        $user->custom_field = $data['custom_field'] ?? null;
+        $user->exists = true;
+
+        return $user;
+    }
+}
+```;
 
 class CustomBiblioUserProvider extends BaseProvider
 {
@@ -221,12 +247,100 @@ public function boot()
 
 ### Using Middleware
 
-Protect routes with BiblioCommons authentication:
+The package includes a built-in middleware that automatically authenticates users via BiblioCommons before requests reach your controllers.
+
+#### Built-in Middleware: `AuthenticateBiblioCommons`
+
+**Location:** `Tpl\Shared\Http\Middleware\AuthenticateBiblioCommons`
+
+This middleware:
+- ✅ Checks for BiblioCommons session cookie
+- ✅ Validates session with BiblioCommons API
+- ✅ Authenticates user via BiblioGuard
+- ✅ Redirects to BiblioCommons login if not authenticated
+- ✅ Comprehensive logging for debugging
+
+#### Register the Middleware
+
+In your `bootstrap/app.php`:
 
 ```php
-// Create a middleware
-php artisan make:middleware RequireBiblioAuth
+use Tpl\Shared\Http\Middleware\AuthenticateBiblioCommons;
+
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->alias([
+        'biblio.auth' => AuthenticateBiblioCommons::class,
+    ]);
+})
 ```
+
+#### Use in Routes
+
+```php
+// Protect specific routes
+Route::middleware('biblio.auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/profile', [ProfileController::class, 'show']);
+});
+
+// Or on individual routes
+Route::get('/protected', [Controller::class, 'method'])
+    ->middleware('biblio.auth');
+```
+
+#### Configuration
+
+The middleware uses these configuration values:
+
+```php
+// config/auth.php
+'guards' => [
+    'biblio' => [
+        'session_cookie' => env('BIBLIO_SESSION_COOKIE', 'bc_session'),
+    ],
+],
+
+// config/services.php
+'bibliocommons' => [
+    'library_id' => env('BIBLIOCOMMONS_LIBRARY_ID', 'tpl'),
+],
+
+// Optional: Auto-login to session guard
+// config/auth.php
+'biblio_auto_login_session' => env('BIBLIO_AUTO_LOGIN_SESSION', false),
+```
+
+#### How It Works
+
+```php
+1. Request arrives at middleware
+2. Check if already authenticated (Auth::guard('biblio')->check())
+3. If yes → continue to controller
+4. If no → check for bc_session cookie
+5. If cookie exists → attempt authentication via BiblioGuard
+6. If authentication succeeds → continue to controller
+7. If authentication fails → redirect to BiblioCommons login
+8. If no cookie → redirect to BiblioCommons login
+```
+
+#### Automatic Session Login
+
+If you want users to also be logged into Laravel's default session guard (for persistent sessions across requests), enable this in your config:
+
+```php
+// config/auth.php
+'biblio_auto_login_session' => true,
+```
+
+Then in the middleware, after BiblioCommons authentication succeeds, the user will also be logged into the session guard:
+
+```php
+Auth::login($user); // Happens automatically when enabled
+```
+
+#### Custom Middleware (Optional)
+
+If you need custom logic, you can create your own middleware:
 
 ```php
 namespace App\Http\Middleware;
@@ -234,39 +348,30 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
-class RequireBiblioAuth
+class CustomBiblioAuth
 {
     public function handle(Request $request, Closure $next)
     {
+        Log::info('Custom BiblioCommons auth middleware');
+
+        // Check BiblioCommons authentication
         if (! Auth::guard('biblio')->check()) {
-            return redirect()->route('login')
-                ->with('error', 'BiblioCommons authentication required');
+            // Custom redirect logic
+            return redirect()->route('custom.login')
+                ->with('error', 'Please log in via BiblioCommons');
         }
+
+        // Custom logic after authentication
+        $user = Auth::guard('biblio')->user();
+        // ... your custom logic ...
 
         return $next($request);
     }
 }
 ```
 
-Register in `bootstrap/app.php`:
-
-```php
-->withMiddleware(function (Middleware $middleware) {
-    $middleware->alias([
-        'biblio.auth' => \App\Http\Middleware\RequireBiblioAuth::class,
-    ]);
-})
-```
-
-Use in routes:
-
-```php
-Route::middleware('biblio.auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index']);
-    Route::get('/profile', [ProfileController::class, 'show']);
-});
-```
 
 ### Checking Authentication Status
 

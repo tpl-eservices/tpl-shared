@@ -17,8 +17,6 @@ A comprehensive shared Laravel package for TPL projects, providing common compon
 - **PHP** 8.4+
 - **Laravel** 12.x
 - **Node.js** 20+
-- **React** 19
-- **Inertia.js** v2
 - **Tailwind CSS** v4
 
 ## 🚀 Quick Start
@@ -420,7 +418,8 @@ Proprietary. All rights reserved.
 
 - **Install the package** → [INSTALL.md](INSTALL.md)
 - **Use BiblioCommons SSO** → [BIBLIOSSO_USAGE.md](BIBLIOSSO_USAGE.md)
-- **Set up Laravel Auth Provider** → [AUTH_PROVIDER_USAGE.md](AUTH_PROVIDER_USAGE.md)
+- **Set up Laravel Auth** → [AUTH_PROVIDER_GUIDE.md](AUTH_PROVIDER_GUIDE.md) ⭐
+- **Use middleware** → [MIDDLEWARE_GUIDE.md](MIDDLEWARE_GUIDE.md)
 - **Read external cookies** → See [Cookie Utilities](#cookie-utilities) above
 - **Publish assets** → [PUBLISHING.md](PUBLISHING.md)
 - **Create a new version** → [MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md)

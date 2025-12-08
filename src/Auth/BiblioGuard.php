@@ -6,6 +6,7 @@ use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
+use Tpl\Shared\Services\BiblioSsoService;
 use Tpl\Shared\Utils\CookieUtils;
 
 class BiblioGuard implements Guard
@@ -14,12 +15,18 @@ class BiblioGuard implements Guard
 
     protected Request $request;
 
+    protected BiblioSsoService $biblioSso;
+
     protected string $cookieName = 'biblioSession';
 
-    public function __construct(UserProvider $provider, Request $request)
-    {
+    public function __construct(
+        UserProvider $provider,
+        Request $request,
+        BiblioSsoService $biblioSso
+    ) {
         $this->provider = $provider;
         $this->request = $request;
+        $this->biblioSso = $biblioSso;
     }
 
     /**
@@ -39,10 +46,17 @@ class BiblioGuard implements Guard
             return null;
         }
 
-        // Retrieve user by BiblioCommons session
-        return $this->user = $this->provider->retrieveByCredentials([
-            'biblio_session_id' => $sessionId,
-        ]);
+        // Validate session and get user data from BiblioCommons
+        $sessionData = $this->biblioSso->validateSession($sessionId);
+
+        if (! $sessionData || ! isset($sessionData['user']['id'])) {
+            return null;
+        }
+
+        // Retrieve user by borrower ID from BiblioCommons API
+        $borrowerId = $sessionData['user']['id'];
+
+        return $this->user = $this->provider->retrieveById($borrowerId);
     }
 
     /**
@@ -54,7 +68,17 @@ class BiblioGuard implements Guard
             return false;
         }
 
-        return $this->provider->retrieveByCredentials($credentials) !== null;
+        // Validate session with BiblioCommons
+        $sessionData = $this->biblioSso->validateSession($credentials['biblio_session_id']);
+
+        if (! $sessionData || ! isset($sessionData['user']['id'])) {
+            return false;
+        }
+
+        // Check if we can retrieve user by borrower ID
+        $borrowerId = $sessionData['user']['id'];
+
+        return $this->provider->retrieveById($borrowerId) !== null;
     }
 
     /**

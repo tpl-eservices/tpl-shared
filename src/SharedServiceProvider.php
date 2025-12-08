@@ -48,7 +48,11 @@ class SharedServiceProvider extends ServiceProvider
         Auth::extend('biblio', function ($app, $name, array $config) {
             $provider = Auth::createUserProvider($config['provider']);
 
-            return new BiblioGuard($provider, $app->make('request'));
+            return new BiblioGuard(
+                $provider,
+                $app->make('request'),
+                $app->make(BiblioSsoService::class)
+            );
         });
 
         // Routes, views, migrations
