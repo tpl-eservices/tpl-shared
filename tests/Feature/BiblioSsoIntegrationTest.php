@@ -117,5 +117,3 @@ it('handles failed authentication with valid cookie', function (): void {
 
     expect($profile)->toBeNull();
 });
-
-
