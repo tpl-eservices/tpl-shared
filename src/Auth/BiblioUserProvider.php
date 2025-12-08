@@ -108,6 +108,7 @@ class BiblioUserProvider implements UserProvider
             ? trim($data['first_name'].' '.$data['last_name'])
             : ($data['name'] ?? 'BiblioCommons User');
         $user->email = $data['email'] ?? '';
+        $user->barcode = $data['barcode'] ?? ''; // BiblioCommons barcode
         $user->password = ''; // No password for SSO users
         $user->email_verified_at = now(); // Assume verified through BiblioCommons
 
