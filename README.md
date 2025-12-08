@@ -276,6 +276,9 @@ Get your token at: https://github.com/settings/tokens (requires `repo` scope)
 ```
 tpl-shared/
 ├── src/                          # Package source code
+│   ├── Auth/                     # Authentication components
+│   │   ├── BiblioUserProvider.php
+│   │   └── BiblioGuard.php
 │   ├── Services/                 # Service classes
 │   │   ├── BiblioCommonsTemplateService.php
 │   │   └── BiblioSsoService.php
@@ -417,6 +420,7 @@ Proprietary. All rights reserved.
 
 - **Install the package** → [INSTALL.md](INSTALL.md)
 - **Use BiblioCommons SSO** → [BIBLIOSSO_USAGE.md](BIBLIOSSO_USAGE.md)
+- **Set up Laravel Auth Provider** → [AUTH_PROVIDER_USAGE.md](AUTH_PROVIDER_USAGE.md)
 - **Read external cookies** → See [Cookie Utilities](#cookie-utilities) above
 - **Publish assets** → [PUBLISHING.md](PUBLISHING.md)
 - **Create a new version** → [MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md)

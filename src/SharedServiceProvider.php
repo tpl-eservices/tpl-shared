@@ -2,9 +2,12 @@
 
 namespace Tpl\Shared;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Tpl\Shared\Auth\BiblioGuard;
+use Tpl\Shared\Auth\BiblioUserProvider;
 use Tpl\Shared\Console\Commands\ClearBiblioCommonsCache;
 use Tpl\Shared\Services\BiblioCommonsTemplateService;
 use Tpl\Shared\Services\BiblioSsoService;
@@ -33,6 +36,21 @@ class SharedServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register BiblioCommons authentication provider
+        Auth::provider('biblio', function ($app, array $config) {
+            return new BiblioUserProvider(
+                $app->make(BiblioSsoService::class),
+                $config['model']
+            );
+        });
+
+        // Register BiblioCommons authentication guard
+        Auth::extend('biblio', function ($app, $name, array $config) {
+            $provider = Auth::createUserProvider($config['provider']);
+
+            return new BiblioGuard($provider, $app->make('request'));
+        });
+
         // Routes, views, migrations
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'tpl-shared');

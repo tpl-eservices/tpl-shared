@@ -18,9 +18,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Static methods: `getRaw()`, `hasRaw()`, `getRawMany()`
   - Global helper function: `getRawCookie()`
   - Essential for reading cookies from external systems
+- **Authentication Provider & Guard** ⭐ NEW
+  - `BiblioUserProvider` - Custom Laravel user provider for BiblioCommons
+  - `BiblioGuard` - Custom authentication guard that reads cookies
+  - Automatic user creation/update in local database
+  - Works with Laravel's standard `Auth` facade
+  - Zero-code authentication for host apps
 - **Comprehensive Documentation**
   - `BIBLIOSSO_USAGE.md` - Complete BiblioCommons SSO usage guide
   - `BIBLIOSSO_IMPLEMENTATION.md` - Implementation details and architecture
+  - `AUTH_PROVIDER_GUIDE.md` - Authentication provider setup and usage
   - Updated README with complete documentation index
 - **Test Coverage**
   - 22 new tests for BiblioSSO and CookieUtils (all passing)
