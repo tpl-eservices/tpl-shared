@@ -1,5 +1,7 @@
 <?php
 
+use Tpl\Shared\Utils\CookieUtils;
+
 if (! function_exists('tplSharedAsset')) {
     /**
      * Resolve the hashed asset filename from the shared package manifest.
@@ -19,5 +21,20 @@ if (! function_exists('tplSharedAsset')) {
         }
 
         return null;
+    }
+}
+
+if (! function_exists('getRawCookie')) {
+    /**
+     * Get raw cookie value bypassing Laravel's encryption/decryption.
+     *
+     * This is useful for reading cookies set by external systems (like BiblioCommons)
+     * that are not encrypted by Laravel.
+     */
+    function getRawCookie(string $name, ?\Illuminate\Http\Request $request = null): ?string
+    {
+        $request = $request ?? request();
+
+        return CookieUtils::getRaw($name, $request);
     }
 }

@@ -20,7 +20,7 @@ class BiblioCommonsTemplateService
                 $apiUrl = config('services.bibliocommons.external_templates_url');
 
                 if (empty($apiUrl)) {
-                    Log::warning('BiblioCommons API URL not configured');
+                    Log::warning('BiblioCommons Templates API URL not configured');
 
                     return $this->getDefaultTemplate();
                 }
@@ -28,7 +28,7 @@ class BiblioCommonsTemplateService
                 $response = Http::timeout(10)->get($apiUrl);
 
                 if ($response->failed()) {
-                    Log::warning('BiblioCommons API request failed', [
+                    Log::warning('BiblioCommons Templates API request failed', [
                         'status' => $response->status(),
                         'url' => $apiUrl,
                     ]);

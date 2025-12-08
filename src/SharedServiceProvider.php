@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Tpl\Shared\Console\Commands\ClearBiblioCommonsCache;
 use Tpl\Shared\Services\BiblioCommonsTemplateService;
+use Tpl\Shared\Services\BiblioSsoService;
 use Tpl\Shared\View\Components\Layout;
 use Tpl\Shared\View\Composers\BiblioCommonsComposer;
 
@@ -22,6 +23,9 @@ class SharedServiceProvider extends ServiceProvider
 
         // Register BiblioCommons service as singleton
         $this->app->singleton(BiblioCommonsTemplateService::class);
+
+        // Register BiblioCommons SSO service as singleton
+        $this->app->singleton(BiblioSsoService::class);
     }
 
     /**
