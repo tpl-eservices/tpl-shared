@@ -273,11 +273,11 @@ call :format
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
 
-REM Check if there are changes to commit
-for /f %%i in ('git status --porcelain 2^>nul ^| find /c /v ""') do set CHANGES_COUNT=%%i
-if !CHANGES_COUNT! gtr 0 (
+REM Check if there are PHP/code changes to commit (excluding build artifacts)
+for /f %%i in ('git status --porcelain 2^>nul ^| findstr /v "public/build/" ^| find /c /v ""') do set CODE_CHANGES=%%i
+if !CODE_CHANGES! gtr 0 (
     echo Step 2: Committing formatted changes...
-    git add -A
+    git add --all -- :!public/build/*
     git commit -m "Format code for release"
     echo.
 )
@@ -287,12 +287,21 @@ call :build-assets
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
 
-echo Step 4: Creating patch version tag...
+REM Check if there are build artifacts to commit
+for /f %%i in ('git status --porcelain 2^>nul ^| find /c /v ""') do set BUILD_CHANGES=%%i
+if !BUILD_CHANGES! gtr 0 (
+    echo Step 4: Committing build artifacts...
+    git add -A
+    git commit -m "Build frontend assets for release"
+    echo.
+)
+
+echo Step 5: Creating patch version tag...
 call :create-tag patch
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
 
-echo Step 5: Pushing to GitHub...
+echo Step 6: Pushing to GitHub...
 call :push
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.

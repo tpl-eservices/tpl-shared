@@ -207,11 +207,12 @@ function Start-Release {
     Format-Code
     Write-Host ""
 
-    # Check if there are changes to commit
-    $status = git status --porcelain 2>$null
+    # Check if there are PHP/code changes to commit (excluding build artifacts)
+    $status = git status --porcelain 2>$null | Where-Object { $_ -notmatch 'public/build/' }
     if ($status) {
         Write-Host "Step 2: Committing formatted changes..." -ForegroundColor Yellow
-        git add -A
+        # Add only non-build files
+        git add --all -- ':!public/build/*'
         git commit -m "Format code for release"
         Write-Host ""
     }
@@ -220,11 +221,20 @@ function Start-Release {
     Build-Assets
     Write-Host ""
 
-    Write-Host "Step 4: Creating patch version tag..." -ForegroundColor Yellow
+    # Check if there are build artifacts to commit
+    $status = git status --porcelain 2>$null
+    if ($status) {
+        Write-Host "Step 4: Committing build artifacts..." -ForegroundColor Yellow
+        git add -A
+        git commit -m "Build frontend assets for release"
+        Write-Host ""
+    }
+
+    Write-Host "Step 5: Creating patch version tag..." -ForegroundColor Yellow
     New-Tag -Type "patch"
     Write-Host ""
 
-    Write-Host "Step 5: Pushing to GitHub..." -ForegroundColor Yellow
+    Write-Host "Step 6: Pushing to GitHub..." -ForegroundColor Yellow
     Push-ToGitHub
     Write-Host ""
 

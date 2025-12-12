@@ -142,19 +142,25 @@ release:
 	@echo "Step 1: Formatting code..."
 	@$(MAKE) format
 	@echo ""
-	@if [ -n "$$(git status --porcelain)" ]; then \
+	@if [ -n "$$(git status --porcelain | grep -v 'public/build/')" ]; then \
 		echo "Step 2: Committing formatted changes..."; \
-		git add -A; \
+		git add --all -- ':!public/build/*'; \
 		git commit -m "Format code for release"; \
 		echo ""; \
 	fi
 	@echo "Step 3: Building frontend assets..."
 	@$(MAKE) build
 	@echo ""
-	@echo "Step 4: Creating patch version tag..."
+	@if [ -n "$$(git status --porcelain)" ]; then \
+		echo "Step 4: Committing build artifacts..."; \
+		git add -A; \
+		git commit -m "Build frontend assets for release"; \
+		echo ""; \
+	fi
+	@echo "Step 5: Creating patch version tag..."
 	@$(MAKE) tag-patch
 	@echo ""
-	@echo "Step 5: Pushing to GitHub..."
+	@echo "Step 6: Pushing to GitHub..."
 	@$(MAKE) push
 	@echo ""
 	@echo "🎉 Release complete!"
