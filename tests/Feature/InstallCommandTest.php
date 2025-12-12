@@ -52,7 +52,7 @@ it('handles windows paths correctly when creating backups', function () {
     File::put($testFile, '<?php return [];');
 
     // Use reflection to test the createBackup method
-    $command = new \Tpl\Shared\Console\Commands\InstallTplShared();
+    $command = new \Tpl\Shared\Console\Commands\InstallTplShared;
 
     $reflection = new \ReflectionClass($command);
     $method = $reflection->getMethod('createBackup');
@@ -81,4 +81,3 @@ it('handles windows paths correctly when creating backups', function () {
     File::delete($testFile);
     File::deleteDirectory($backupDir);
 });
-
