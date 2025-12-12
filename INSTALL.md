@@ -31,17 +31,8 @@ Since this is a **private repository**, you need to authenticate with GitHub:
 
 ### Step 2: Add Repository to Your Laravel App
 
-In your Laravel application's `composer.json`, add this to the repositories array:
-
-```json
-{
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/tpl-eservices/tpl-shared.git"
-        }
-    ]
-}
+```shell
+composer repo add shared vcs https://github.com/tpl-eservices/tpl-shared.git
 ```
 
 ### Step 3: Install the Package

@@ -6,7 +6,8 @@ Start here if you're new to the package:
 
 1. **[README.md](README.md)** - Complete package overview and quick start
 2. **[INSTALL.md](INSTALL.md)** - Detailed installation instructions
-3. **[QUICK_START.md](QUICK_START.md)** - 5-minute setup guide for team members
+3. **[INSTALL_COMMAND.md](INSTALL_COMMAND.md)** - **NEW** Automated install command guide ✨
+4. **[QUICK_START.md](QUICK_START.md)** - 5-minute setup guide for team members
 
 ---
 
@@ -52,8 +53,9 @@ Start here if you're new to the package:
 - **[PACKAGE_DEV_NOTES.md](PACKAGE_DEV_NOTES.md)** - Notes for package developers
 - **[PUBLISHING.md](PUBLISHING.md)** - Asset publishing guide
 
-### Build & Version Management
-- **[MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md)** - Complete Makefile usage guide
+#### Build & Version Management
+- **[MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md)** - Complete Makefile usage guide (Unix/Linux/Mac)
+- **[WINDOWS_BUILD_GUIDE.md](WINDOWS_BUILD_GUIDE.md)** - **NEW** Windows build scripts guide ✨
 - **[MAKEFILE_QUICK_REF.md](MAKEFILE_QUICK_REF.md)** - Quick reference for Makefile commands
 - **[VERSION_MANAGEMENT.md](VERSION_MANAGEMENT.md)** - Version management workflow
 
@@ -87,12 +89,14 @@ Start here if you're new to the package:
 
 #### Installation & Setup
 - **Install the package** → [INSTALL.md](INSTALL.md)
+- **Use automated install command** → [INSTALL_COMMAND.md](INSTALL_COMMAND.md) ⭐
 - **Quick 5-minute setup** → [QUICK_START.md](QUICK_START.md)
 
 #### Development
 - **Develop this package** → [PACKAGE_DEV_NOTES.md](PACKAGE_DEV_NOTES.md)
 - **Publish assets** → [PUBLISHING.md](PUBLISHING.md)
-- **Use Makefile commands** → [MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md)
+- **Use Makefile commands (Unix)** → [MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md)
+- **Use Windows build scripts** → [WINDOWS_BUILD_GUIDE.md](WINDOWS_BUILD_GUIDE.md) ⭐
 - **Manage versions** → [VERSION_MANAGEMENT.md](VERSION_MANAGEMENT.md)
 
 #### Troubleshooting

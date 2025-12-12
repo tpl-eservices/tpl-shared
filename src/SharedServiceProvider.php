@@ -9,6 +9,8 @@ use Illuminate\Support\ServiceProvider;
 use Tpl\Shared\Auth\BiblioGuard;
 use Tpl\Shared\Auth\BiblioUserProvider;
 use Tpl\Shared\Console\Commands\ClearBiblioCommonsCache;
+use Tpl\Shared\Console\Commands\InstallTplShared;
+use Tpl\Shared\Console\Commands\UninstallTplShared;
 use Tpl\Shared\Services\BiblioCommonsTemplateService;
 use Tpl\Shared\Services\BiblioSsoService;
 use Tpl\Shared\View\Components\Layout;
@@ -70,10 +72,12 @@ class SharedServiceProvider extends ServiceProvider
             'tpl-shared::components.inertia-layout',
         ], BiblioCommonsComposer::class);
 
-        // Register ClearBiblioCommonsCache command
+        // Register console commands
         if ($this->app->runningInConsole()) {
             $this->commands([
                 ClearBiblioCommonsCache::class,
+                InstallTplShared::class,
+                UninstallTplShared::class,
             ]);
         }
 

@@ -23,7 +23,12 @@ A comprehensive shared Laravel package for TPL projects, providing common compon
 
 For complete installation instructions, see [INSTALL.md](INSTALL.md) or [QUICK_START.md](QUICK_START.md).
 
-### 1. Add Repository to composer.json
+### 1. Configure Composer (run once on your machine):**
+ ```bash
+ composer config --global github-oauth.github.com YOUR_TOKEN_HERE
+ ```
+
+### 2. Add Repository to composer.json
 
 ```json
 {
@@ -36,37 +41,47 @@ For complete installation instructions, see [INSTALL.md](INSTALL.md) or [QUICK_S
 }
 ```
 
-### 2. Install Package
+### 3. Install Package
 
 ```bash
 composer require tpl/shared:^0.1
 ```
 
-### 3. Configure (if using BiblioCommons)
+### 4. Run Automated Install Command ✨ NEW
 
-Add to your `.env`:
+```bash
+php artisan tpl-shared:install
+```
+
+This automated command will:
+- ✅ Configure `config/services.php` with BiblioCommons settings
+- ✅ Configure `config/auth.php` with biblio guard and provider
+- ✅ Register middleware in `bootstrap/app.php`
+- ✅ Update User model for stateless authentication
+- ✅ Add environment variables to `.env`
+- ✅ Create backups of all modified files
+- ✅ Track installation status
+
+See [INSTALL_COMMAND.md](INSTALL_COMMAND.md) for complete documentation.
+
+### 5. Update Environment Variables
+
+Edit `.env` and replace placeholder values:
 
 ```env
 BIBLIOCOMMONS_API_BASE_URL=https://api.bibliocommons.com
-BIBLIOCOMMONS_API_KEY=your-api-key-here
+BIBLIOCOMMONS_API_KEY=your-actual-api-key
 BIBLIOCOMMONS_LIBRARY_ID=tpl
+BIBLIOCOMMONS_API_URL=https://tpl.bibliocommons.com/api/external-templates
 ```
 
-Add to `config/services.php`:
-
-```php
-'bibliocommons' => [
-    'api_base_url' => env('BIBLIOCOMMONS_API_BASE_URL', 'https://api.bibliocommons.com'),
-    'api_key' => env('BIBLIOCOMMONS_API_KEY'),
-    'library_id' => env('BIBLIOCOMMONS_LIBRARY_ID', 'tpl'),
-    'external_templates_url' => env('BIBLIOCOMMONS_API_URL', 'https://tpl.bibliocommons.com/widgets/external_templates.json'),
-],
-```
+> **Note:** The install command already added these to your `.env` file with placeholders. Update them with your actual values.
 
 ## 📚 Documentation
 
 ### Getting Started
 - **[INSTALL.md](INSTALL.md)** - Detailed installation instructions
+- **[INSTALL_COMMAND.md](INSTALL_COMMAND.md)** - **NEW** Automated install command guide ✨
 - **[QUICK_START.md](QUICK_START.md)** - Fast setup guide for team members
 - **[SETUP_COMPLETE.md](SETUP_COMPLETE.md)** - Post-installation verification
 
@@ -89,7 +104,8 @@ Add to `config/services.php`:
 - **[PUBLISHING.md](PUBLISHING.md)** - Asset publishing guide
 
 #### Build & Version Management
-- **[MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md)** - Complete Makefile usage guide
+- **[MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md)** - Complete Makefile usage guide (Unix/Linux/Mac)
+- **[WINDOWS_BUILD_GUIDE.md](WINDOWS_BUILD_GUIDE.md)** - **NEW** Windows build scripts guide ✨
 - **[MAKEFILE_QUICK_REF.md](MAKEFILE_QUICK_REF.md)** - Quick reference for Makefile commands
 - **[VERSION_MANAGEMENT.md](VERSION_MANAGEMENT.md)** - Version management workflow
 
