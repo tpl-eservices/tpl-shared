@@ -316,6 +316,18 @@ The following require manual cleanup:
 
 ## Troubleshooting
 
+### Issue: Installation fails with "mkdir(): No such file or directory"
+
+**Status:** ✅ **FIXED** (as of v0.1.25)
+
+**Cause:** Windows path separator issue in backup directory creation.
+
+**Solution:** Update to the latest version of tpl-shared. The issue has been resolved by properly normalizing Windows paths (backslashes) to forward slashes when creating backup directories.
+
+If you're still experiencing this issue:
+1. Ensure you're using the latest version: `composer update tpl/shared`
+2. Check that you have write permissions to the `storage/backups` directory
+
 ### Issue: Installation fails on one file
 
 **Solution:** The command continues with other files and creates stub files for failed modifications. Check:

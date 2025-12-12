@@ -378,8 +378,15 @@ class InstallTplShared extends Command
      */
     protected function createBackup(string $filePath): void
     {
-        $relativePath = str_replace(base_path().'/', '', $filePath);
-        $backupPath = $this->backupDir.'/'.$relativePath;
+        // Normalize paths to use forward slashes for cross-platform compatibility
+        $normalizedFilePath = str_replace('\\', '/', $filePath);
+        $normalizedBasePath = str_replace('\\', '/', base_path());
+
+        // Remove base path to get relative path
+        $relativePath = str_replace($normalizedBasePath.'/', '', $normalizedFilePath);
+
+        // Build backup path using forward slashes
+        $backupPath = str_replace('\\', '/', $this->backupDir).'/'.$relativePath;
 
         File::ensureDirectoryExists(dirname($backupPath));
         File::copy($filePath, $backupPath);

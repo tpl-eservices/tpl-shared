@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Windows Path Compatibility** - Fixed `tpl-shared:install` command failing on Windows with "mkdir(): No such file or directory" error
+  - Properly normalize Windows path separators (backslashes) to forward slashes when creating backup directories
+  - Added test coverage for Windows path handling
+
 ### Added
 - **BiblioCommons SSO Integration**
   - `BiblioSsoService` for authenticating users via BiblioCommons API
