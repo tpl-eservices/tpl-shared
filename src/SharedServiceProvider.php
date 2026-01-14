@@ -9,6 +9,7 @@ use Illuminate\Support\ServiceProvider;
 use Tpl\Shared\Auth\BiblioGuard;
 use Tpl\Shared\Auth\BiblioUserProvider;
 use Tpl\Shared\Console\Commands\ClearBiblioCommonsCache;
+use Tpl\Shared\Console\Commands\DiagnoseBiblioCommons;
 use Tpl\Shared\Console\Commands\InstallTplShared;
 use Tpl\Shared\Console\Commands\UninstallTplShared;
 use Tpl\Shared\Services\BiblioCommonsTemplateService;
@@ -76,6 +77,7 @@ class SharedServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 ClearBiblioCommonsCache::class,
+                DiagnoseBiblioCommons::class,
                 InstallTplShared::class,
                 UninstallTplShared::class,
             ]);

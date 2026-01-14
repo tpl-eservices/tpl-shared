@@ -26,6 +26,8 @@
       <link rel="stylesheet" href="{{ tplSharedAsset('css') }}">
   @endif
 
+  {{ $head ?? '' }}
+
   @stack('head')
 </head>
 

@@ -202,6 +202,9 @@ getRawCookie('cookieName'); // Bypasses Laravel encryption
 ## 📋 Available Commands
 
 ```bash
+ Diagnose BiblioCommons configuration and connectivity
+php artisan bibliocommons:diagnose
+
 # Clear BiblioCommons template cache
 php artisan tpl-shared:clear-cache
 
@@ -374,6 +377,19 @@ Add to your `config/services.php`:
 ```
 
 ## 🐛 Troubleshooting
+
+### BiblioCommons Not Loading
+
+**⚡ Quick Fix:** See [QUICK_FIX_BIBLIOCOMMONS.md](QUICK_FIX_BIBLIOCOMMONS.md) for a 5-minute solution.
+
+**Run diagnostic:**
+```bash
+php artisan bibliocommons:diagnose
+```
+
+**Detailed guides:**
+- [FIX_HOST_APP_SETUP.md](FIX_HOST_APP_SETUP.md) - Step-by-step fix guide
+- [TROUBLESHOOTING_HOST_APP.md](TROUBLESHOOTING_HOST_APP.md) - Comprehensive troubleshooting
 
 ### Composer Can't Find New Versions
 

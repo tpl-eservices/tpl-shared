@@ -6,6 +6,8 @@
   <meta charset="utf-8">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
 
   <link rel="icon" href="{{ secure_asset('favicon.ico') }}" sizes="any">
   <link rel="icon" href="{{ secure_asset('favicon.svg') }}" type="image/svg+xml">
@@ -25,6 +27,8 @@
   @if (tplSharedAsset('css'))
     <link rel="stylesheet" href="{{ tplSharedAsset('css') }}">
   @endif
+
+  {{ $head ?? '' }}
 
   @stack('head')
 </head>

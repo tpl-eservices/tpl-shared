@@ -63,6 +63,15 @@ Start here if you're new to the package:
 
 ## 🐛 Troubleshooting
 
+### Host App Issues
+- **[QUICK_FIX_BIBLIOCOMMONS.md](QUICK_FIX_BIBLIOCOMMONS.md)** - **⚡ 5-MINUTE FIX** if BiblioCommons not loading 🚨
+- **[HOST_APP_FIX_CHECKLIST.md](HOST_APP_FIX_CHECKLIST.md)** - **✅ STEP-BY-STEP CHECKLIST** for implementation
+- **[FIX_HOST_APP_SETUP.md](FIX_HOST_APP_SETUP.md)** - **START HERE** if BiblioCommons header/footer not loading ⭐
+- **[TROUBLESHOOTING_HOST_APP.md](TROUBLESHOOTING_HOST_APP.md)** - Comprehensive host app troubleshooting guide
+- **[SOLUTION_SUMMARY.md](SOLUTION_SUMMARY.md)** - Technical summary of the BiblioCommons issue and solution
+- **[COMPLETE_IMPLEMENTATION_SUMMARY.md](COMPLETE_IMPLEMENTATION_SUMMARY.md)** - Full implementation documentation
+
+### Package Issues
 - **[TROUBLESHOOTING_VERSIONS.md](TROUBLESHOOTING_VERSIONS.md)** - Fix version and tagging issues
 - **[VENDOR_PUBLISH_FIX.md](VENDOR_PUBLISH_FIX.md)** - Resolve asset publishing problems
 
@@ -98,6 +107,12 @@ Start here if you're new to the package:
 - **Use Makefile commands (Unix)** → [MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md)
 - **Use Windows build scripts** → [WINDOWS_BUILD_GUIDE.md](WINDOWS_BUILD_GUIDE.md) ⭐
 - **Manage versions** → [VERSION_MANAGEMENT.md](VERSION_MANAGEMENT.md)
+
+#### Troubleshooting
+- **⚡ BiblioCommons not loading (5-min fix)** → [QUICK_FIX_BIBLIOCOMMONS.md](QUICK_FIX_BIBLIOCOMMONS.md) 🚨
+- **BiblioCommons not loading (detailed)** → [FIX_HOST_APP_SETUP.md](FIX_HOST_APP_SETUP.md) ⭐
+- **Comprehensive troubleshooting** → [TROUBLESHOOTING_HOST_APP.md](TROUBLESHOOTING_HOST_APP.md)
+- **Fix version issues** → [TROUBLESHOOTING_VERSIONS.md](TROUBLESHOOTING_VERSIONS.md)
 
 #### Troubleshooting
 - **Fix version issues** → [TROUBLESHOOTING_VERSIONS.md](TROUBLESHOOTING_VERSIONS.md)
