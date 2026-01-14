@@ -125,8 +125,6 @@ class BiblioSsoService
 
     /**
      * Fetches the library branches from BiblioCommons API.
-     *
-     * @return array
      */
     private function getLibraryBranches(): array
     {
@@ -134,7 +132,7 @@ class BiblioSsoService
         return Cache::remember('library_branches', 3600, function () {
             // Fetch locations from BiblioCommons API
             $response = Http::get(config('services.bibliocommons.api_url').'/libraries/tpl/locations', [
-                'api_key' => config('services.bibliocommons.titles_api_key')
+                'api_key' => config('services.bibliocommons.titles_api_key'),
             ]);
 
             if ($response->failed()) {
@@ -148,10 +146,12 @@ class BiblioSsoService
                         'status' => $response->status(),
                         'body' => $response->body(),
                     ]);
+
                     return [];
                 }
 
                 $data = $response->json();
+
                 return $data['locations'] ?? [];
             }
 
