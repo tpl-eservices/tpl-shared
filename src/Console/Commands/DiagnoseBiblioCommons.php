@@ -126,4 +126,3 @@ class DiagnoseBiblioCommons extends Command
         return self::SUCCESS;
     }
 }
-

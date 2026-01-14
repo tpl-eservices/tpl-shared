@@ -115,4 +115,3 @@ test('diagnostic shows view composer information', function () {
         ->expectsOutputToContain('tpl-shared::components.layout')
         ->expectsOutputToContain('tpl-shared::components.static-layout');
 });
-
