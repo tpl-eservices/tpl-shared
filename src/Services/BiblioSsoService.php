@@ -153,6 +153,9 @@ class BiblioSsoService
 
                 $data = $response->json();
                 return $data['locations'] ?? [];
-            });
-        }
+            }
+
+            return [];
+        });
+    }
 }
