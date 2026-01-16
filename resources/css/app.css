@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -8,193 +8,191 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans:
-    'Roboto', Helvetica, Arial, ui-sans-serif, system-ui, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
+    --font-sans:
+        'Roboto', Helvetica, Arial, ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
 
-  --color-disabled: #5e6a87;
-  --color-error-border: #f06623;
-  --color-error: #ffdece;
-  --color-info: #e2f0ff;
-  --color-info-border: #00468d;
-  --color-login-border: #006700;
-  --color-login-dark: #004d00;
-  --color-login: #008000;
-  --color-logout-border: #515151;
-  --color-logout-hover: #828282;
-  --color-logout: #666666;
-  --color-tpl-dark: #00468d;
-  --color-tpl: #005fc0;
+    --color-disabled: #5e6a87;
+    --color-error-border: #f06623;
+    --color-error: #ffdece;
+    --color-info: #e2f0ff;
+    --color-info-border: #00468d;
+    --color-login-border: #006700;
+    --color-login-dark: #004d00;
+    --color-login: #008000;
+    --color-logout-border: #515151;
+    --color-logout-hover: #828282;
+    --color-logout: #666666;
+    --color-tpl-dark: #00468d;
+    --color-tpl: #005fc0;
 }
 
 @layer base {
-  body {
-    @apply h-full font-sans text-base antialiased;
-  }
-
-  a {
-    color: var(--color-tpl);
-    font-weight: 600;
-
-    &:hover {
-      color: var(--color-tpl-dark);
-      text-decoration: underline;
-    }
-  }
-
-  h1 {
-    font-size: 2rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
-
-  h3 {
-    font-size: 1.25rem;
-  }
-
-  p {
-    margin: 0.5rem 0;
-  }
-
-  ul {
-    list-style: disc inside;
-
-    li {
-      margin: 0.5rem 0;
-    }
-  }
-
-  /* CLASSES */
-
-  .chat-form {
-    input[type=submit] {
-      background: var(--color-tpl);
-      border-radius: 0.5rem;
-      color: #fff;
-      display: inline-block;
-      margin: 1rem 0 2rem 0;
-      min-width: 6rem;
-      padding: 0.5rem;
+    body {
+        @apply h-full font-sans text-base antialiased;
     }
 
-    label {
-      display: inline-block;
-      margin-bottom: 0.5rem;
+    a {
+        color: var(--color-tpl);
+        font-weight: 600;
+
+        &:hover {
+            color: var(--color-tpl-dark);
+            text-decoration: underline;
+        }
     }
 
-    textarea {
-      max-width: 100%;
-      min-height: 10rem;
-
-      &[rows] {
-        height: auto;
-      }
+    h1 {
+        font-size: 2rem;
     }
 
-    .required {
-      color: #F00;
-    }
-
-    #errorMessageHeader {
-      background-color: #FFC;
-      border-color: #F00;
-      border-style: dotted;
-      border-width: 1px;
-      display: none;
-      font-weight: bold;
-      margin-bottom: 10px;
-      margin-top: 10px;
-      padding-left: 10px;
-      width: 433px;
-    }
-  }
-
-  .colour-block-list {
-
-    .colour-block-list-item {
-      width: 100%;
-
-      a:hover {
-        text-decoration: none;
-      }
-
-      div {
-        color: #fff;
+    h2 {
         font-size: 1.5rem;
-        padding: 1.25rem;
-        margin: 2rem 0;
-        transition: 0.1s ease-in-out;
-
-        &:first-child {
-          margin: 0 0 2rem 0;
-        }
-      }
-
-      #branch-homepage-option {
-        background: #0c349a;
-
-        &:hover {
-          box-shadow: 0px 0px 20px #0c349a;
-        }
-      }
-
-      #branch-research-option {
-        background: #3d9e3d;
-
-        &:hover {
-          box-shadow: 0px 0px 20px #3d9e3d;
-        }
-      }
-
-      #branch-internet-option {
-        background: #f2612d;
-
-        &:hover {
-          box-shadow: 0px 0px 20px #f2612d;
-        }
-      }
-
-      #branch-help-option {
-        background: #0c869f;
-
-        &:hover {
-          box-shadow: 0px 0px 20px #0c869f;
-        }
-      }
     }
-  }
 
-  .cp-screen-reader-shortcuts {
-    left: -10000px;
-    position: absolute;
-  }
-
-  .legacy-search-styles {
-    #alpha-index {
-      a {
+    h3 {
         font-size: 1.25rem;
-        font-weight: 700;
-      }
     }
 
-    #result-list {
-      .access-online {
-        background: #e22b5d;
-        border-radius: 0.5rem;
-        color: #fff;
-        display: inline-block;
-        padding: 0.5rem;
-        margin: 1rem 0 2rem 0;
-      }
-
-      .title {
-        font-size: 1.25rem;
-        font-weight: 700;
-      }
+    p {
+        margin: 0.5rem 0;
     }
-  }
 
+    ul {
+        list-style: disc inside;
+
+        li:not(.dropdown) {
+            margin: 0.5rem 0;
+        }
+    }
+
+    /* CLASSES */
+
+    .chat-form {
+        input[type='submit'] {
+            background: var(--color-tpl);
+            border-radius: 0.5rem;
+            color: #fff;
+            display: inline-block;
+            margin: 1rem 0 2rem 0;
+            min-width: 6rem;
+            padding: 0.5rem;
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        textarea {
+            max-width: 100%;
+            min-height: 10rem;
+
+            &[rows] {
+                height: auto;
+            }
+        }
+
+        .required {
+            color: #f00;
+        }
+
+        #errorMessageHeader {
+            background-color: #ffc;
+            border-color: #f00;
+            border-style: dotted;
+            border-width: 1px;
+            display: none;
+            font-weight: bold;
+            margin-bottom: 10px;
+            margin-top: 10px;
+            padding-left: 10px;
+            width: 433px;
+        }
+    }
+
+    .colour-block-list {
+        .colour-block-list-item {
+            width: 100%;
+
+            a:hover {
+                text-decoration: none;
+            }
+
+            div {
+                color: #fff;
+                font-size: 1.5rem;
+                padding: 1.25rem;
+                margin: 2rem 0;
+                transition: 0.1s ease-in-out;
+
+                &:first-child {
+                    margin: 0 0 2rem 0;
+                }
+            }
+
+            #branch-homepage-option {
+                background: #0c349a;
+
+                &:hover {
+                    box-shadow: 0px 0px 20px #0c349a;
+                }
+            }
+
+            #branch-research-option {
+                background: #3d9e3d;
+
+                &:hover {
+                    box-shadow: 0px 0px 20px #3d9e3d;
+                }
+            }
+
+            #branch-internet-option {
+                background: #f2612d;
+
+                &:hover {
+                    box-shadow: 0px 0px 20px #f2612d;
+                }
+            }
+
+            #branch-help-option {
+                background: #0c869f;
+
+                &:hover {
+                    box-shadow: 0px 0px 20px #0c869f;
+                }
+            }
+        }
+    }
+
+    .cp-screen-reader-shortcuts {
+        left: -10000px;
+        position: absolute;
+    }
+
+    .legacy-search-styles {
+        #alpha-index {
+            a {
+                font-size: 1.25rem;
+                font-weight: 700;
+            }
+        }
+
+        #result-list {
+            .access-online {
+                background: #e22b5d;
+                border-radius: 0.5rem;
+                color: #fff;
+                display: inline-block;
+                padding: 0.5rem;
+                margin: 1rem 0 2rem 0;
+            }
+
+            .title {
+                font-size: 1.25rem;
+                font-weight: 700;
+            }
+        }
+    }
 }
