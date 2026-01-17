@@ -131,7 +131,7 @@ class InstallTplShared extends Command
             $content = File::get($configFile);
 
             // Check if already configured
-            if (str_contains($content, "'bibliocommons'")) {
+            if (str_contains($content, "'dxservices'")) {
                 $this->status['services_config'] = 'skipped';
 
                 return true;
@@ -142,11 +142,12 @@ class InstallTplShared extends Command
 
             // Insert BiblioCommons configuration
             $bibliocommonsConfig = $this->getBiblioCommonsConfigBlock();
+            $dxservicesConfig = $this->getDXServicesConfigBlock();
 
             // Find the last item in the return array and add after it
             $pattern = '/(return\s*\[.*?)(\];)/s';
             if (preg_match($pattern, $content, $matches)) {
-                $newContent = $matches[1]."\n".$bibliocommonsConfig."\n".$matches[2];
+                $newContent = $matches[1]."\n".$bibliocommonsConfig."\n".$dxservicesConfig."\n".$matches[2];
                 File::put($configFile, $newContent);
                 $this->modifiedFiles[] = $configFile;
                 $this->status['services_config'] = 'modified';
@@ -553,6 +554,23 @@ class InstallTplShared extends Command
         'api_base_url' => env('BIBLIOCOMMONS_API_BASE_URL', 'https://api.bibliocommons.com'),
         'api_key' => env('BIBLIOCOMMONS_API_KEY'),
         'library_id' => env('BIBLIOCOMMONS_LIBRARY_ID', 'tpl'),
+        'api_url' => env('BIBLIOCOMMONS_API_BASE_URL', 'https://api.bibliocommons.com'),
+        'titles_api_key' => env('BIBLIOCOMMONS_TITLES_API_KEY', env('BIBLIOCOMMONS_API_KEY')),
+    ],
+PHP;
+    }
+
+    /**
+     * Get DXServices config block for services.php.
+     */
+    protected function getDXServicesConfigBlock(): string
+    {
+        return <<<'PHP'
+    // TPL Shared - DXServices Configuration
+    'dxservices' => [
+        'api_url' => env('DXSERVICES_API_URL', 'https://dxservices.tpl.ca'),
+        'customer_service_url' => env('DXSERVICES_CUSTOMER_SERVICE_URL', 'https://dxservices.tpl.ca'),
+        'api_key' => env('DXSERVICES_API_KEY'),
     ],
 PHP;
     }
@@ -639,6 +657,9 @@ BIBLIOCOMMONS_API_BASE_URL=https://api.bibliocommons.com
 # Your BiblioCommons API key (required)
 BIBLIOCOMMONS_API_KEY=your-api-key-here
 
+# BiblioCommons Titles API key (optional, defaults to API_KEY if not set)
+BIBLIOCOMMONS_TITLES_API_KEY=your-titles-api-key-here
+
 # Your library ID (e.g., tpl, nypl, etc.)
 BIBLIOCOMMONS_LIBRARY_ID=tpl
 
@@ -647,6 +668,18 @@ BIBLIOCOMMONS_API_URL=https://tpl.bibliocommons.com/api/external-templates
 
 # BiblioCommons session cookie name (default: bc_session)
 BIBLIO_SESSION_COOKIE=bc_session
+
+# TPL Shared - DXServices Configuration
+# Update these values with your actual DXServices credentials and URLs
+
+# DXServices API base URL
+DXSERVICES_API_URL=https://dxservices.tpl.ca
+
+# Your DXServices API key (required)
+DXSERVICES_API_KEY=your-dx-api-key-here
+
+# DXServices customer service URL
+DXSERVICES_CUSTOMER_SERVICE_URL=https://dxservices.tpl.ca
 ENV;
     }
 
@@ -671,8 +704,13 @@ BIBLIOCOMMONS_API_BASE_URL=https://api.bibliocommons.com
 # Contact your BiblioCommons administrator to obtain this key
 BIBLIOCOMMONS_API_KEY=your-api-key-here
 
+# BiblioCommons Titles API Key
+# Optional separate API key for BiblioCommons Titles API
+# Defaults to BIBLIOCOMMONS_API_KEY if not set
+BIBLIOCOMMONS_TITLES_API_KEY=your-titles-api-key-here
+
 # Library ID
-# Your library's unique identifier in the BiblioCommons system
+# Your library's unique identifier in BiblioCommons system
 # Examples: tpl (Toronto Public Library), nypl (New York Public Library)
 BIBLIOCOMMONS_LIBRARY_ID=tpl
 
@@ -699,6 +737,16 @@ BIBLIO_SESSION_COOKIE=bc_session
 # 3. Direct API Access:
 #    $biblioSso = app(\Tpl\Shared\Services\BiblioSsoService::class);
 #    $profile = $biblioSso->fetchUserProfile($sessionId);
+#
+#    $biblioApi = app(\Tpl\Shared\Services\BiblioCommonsService::class);
+#    $title = $biblioApi->getTitle('12345');
+#    $searchResults = $biblioApi->searchTitles('search query');
+#    $isStacksEligible = $biblioApi->isStacksEligible('12345');
+#
+#    $dxServices = app(\Tpl\Shared\Services\DXServicesService::class);
+#    $catalogBib = $dxServices->getCatalogBib('12345');
+#    $membershipStatus = $dxServices->getMembershipStatus('123456789');
+#    $canPerformAction = $dxServices->canPerformAction('123456789', 'place a hold');
 #
 # Documentation
 # =============
@@ -752,17 +800,27 @@ ENV;
         return <<<'PHP'
 <?php
 
-// TPL Shared - BiblioCommons Configuration
+// TPL Shared - BiblioCommons and DXServices Configuration
 // Add this to your config/services.php file in the return array
 
 return [
     // ...existing services
 
+    // TPL Shared - BiblioCommons Configuration
     'bibliocommons' => [
         'external_templates_url' => env('BIBLIOCOMMONS_API_URL'),
         'api_base_url' => env('BIBLIOCOMMONS_API_BASE_URL', 'https://api.bibliocommons.com'),
         'api_key' => env('BIBLIOCOMMONS_API_KEY'),
         'library_id' => env('BIBLIOCOMMONS_LIBRARY_ID', 'tpl'),
+        'api_url' => env('BIBLIOCOMMONS_API_BASE_URL', 'https://api.bibliocommons.com'),
+        'titles_api_key' => env('BIBLIOCOMMONS_TITLES_API_KEY', env('BIBLIOCOMMONS_API_KEY')),
+    ],
+
+    // TPL Shared - DXServices Configuration
+    'dxservices' => [
+        'api_url' => env('DXSERVICES_API_URL', 'https://dxservices.tpl.ca'),
+        'customer_service_url' => env('DXSERVICES_CUSTOMER_SERVICE_URL', 'https://dxservices.tpl.ca'),
+        'api_key' => env('DXSERVICES_API_KEY'),
     ],
 ];
 PHP;

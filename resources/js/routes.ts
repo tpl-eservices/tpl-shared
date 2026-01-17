@@ -12,4 +12,3 @@ export function login() {
 export function register() {
     return '/register';
 }
-

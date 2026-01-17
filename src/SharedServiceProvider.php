@@ -12,8 +12,10 @@ use Tpl\Shared\Console\Commands\ClearBiblioCommonsCache;
 use Tpl\Shared\Console\Commands\DiagnoseBiblioCommons;
 use Tpl\Shared\Console\Commands\InstallTplShared;
 use Tpl\Shared\Console\Commands\UninstallTplShared;
+use Tpl\Shared\Services\BiblioCommonsService;
 use Tpl\Shared\Services\BiblioCommonsTemplateService;
 use Tpl\Shared\Services\BiblioSsoService;
+use Tpl\Shared\Services\DXServicesService;
 use Tpl\Shared\View\Components\Layout;
 use Tpl\Shared\View\Composers\BiblioCommonsComposer;
 
@@ -27,11 +29,17 @@ class SharedServiceProvider extends ServiceProvider
         // Merge package config if present
         $this->mergeConfigFrom(__DIR__.'/../config/shared.php', 'shared');
 
+        // Register BiblioCommons API service as singleton
+        $this->app->singleton(BiblioCommonsService::class);
+
         // Register BiblioCommons service as singleton
         $this->app->singleton(BiblioCommonsTemplateService::class);
 
         // Register BiblioCommons SSO service as singleton
         $this->app->singleton(BiblioSsoService::class);
+
+        // Register DXServices service as singleton
+        $this->app->singleton(DXServicesService::class);
     }
 
     /**

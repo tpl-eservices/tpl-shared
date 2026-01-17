@@ -23,10 +23,11 @@ A comprehensive shared Laravel package for TPL projects, providing common compon
 
 For complete installation instructions, see [INSTALL.md](INSTALL.md) or [QUICK_START.md](QUICK_START.md).
 
-### 1. Configure Composer (run once on your machine):**
- ```bash
- composer config --global github-oauth.github.com YOUR_TOKEN_HERE
- ```
+### 1. Configure Composer (run once on your machine):\*\*
+
+```bash
+composer config --global github-oauth.github.com YOUR_TOKEN_HERE
+```
 
 ### 2. Add Repository to composer.json
 
@@ -54,6 +55,7 @@ php artisan tpl-shared:install
 ```
 
 This automated command will:
+
 - ✅ Configure `config/services.php` with BiblioCommons settings
 - ✅ Configure `config/auth.php` with biblio guard and provider
 - ✅ Register middleware in `bootstrap/app.php`
@@ -79,41 +81,32 @@ BIBLIOCOMMONS_API_URL=https://tpl.bibliocommons.com/api/external-templates
 
 ## 📚 Documentation
 
-### Getting Started
-- **[INSTALL.md](INSTALL.md)** - Detailed installation instructions
-- **[INSTALL_COMMAND.md](INSTALL_COMMAND.md)** - **NEW** Automated install command guide ✨
-- **[QUICK_START.md](QUICK_START.md)** - Fast setup guide for team members
-- **[SETUP_COMPLETE.md](SETUP_COMPLETE.md)** - Post-installation verification
+### 🚀 Getting Started
 
-### Core Features
+- **[Installation Guide](docs/installation/README.md)** - Complete installation instructions
+- **[Quick Start](docs/installation/README.md#quick-start-5-minutes)** - 5-minute setup guide
+
+### 🎯 Core Features
 
 #### BiblioCommons Integration
-- **[BIBLIOSSO_USAGE.md](BIBLIOSSO_USAGE.md)** - Complete BiblioCommons SSO usage guide
-- **[BIBLIOSSO_IMPLEMENTATION.md](BIBLIOSSO_IMPLEMENTATION.md)** - Implementation details and architecture
-- **[BIBLIOCOMMONS.md](BIBLIOCOMMONS.md)** - BiblioCommons general documentation
-- **[BIBLIOCOMMONS_QUICK_REF.md](BIBLIOCOMMONS_QUICK_REF.md)** - Quick reference guide
-- **[HOST_APP_BIBLIOCOMMONS_EXAMPLE.md](HOST_APP_BIBLIOCOMMONS_EXAMPLE.md)** - Host app integration examples
 
-#### Frontend & Inertia
-- **[INERTIA_USAGE.md](INERTIA_USAGE.md)** - Inertia.js integration guide
+- **[BiblioCommons Guide](docs/features/bibliocommons.md)** - Complete SSO and template integration
+- **[Authentication Setup](docs/features/bibliocommons.md#quick-start-authentication)** - Laravel authentication provider
+- **[Template Integration](docs/features/bibliocommons.md#quick-start-templates)** - Header/footer integration
 
-### Development
+### 🛠️ Development
 
 #### Package Development
-- **[PACKAGE_DEV_NOTES.md](PACKAGE_DEV_NOTES.md)** - Notes for package developers
-- **[PUBLISHING.md](PUBLISHING.md)** - Asset publishing guide
 
-#### Build & Version Management
-- **[MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md)** - Complete Makefile usage guide (Unix/Linux/Mac)
-- **[WINDOWS_BUILD_GUIDE.md](WINDOWS_BUILD_GUIDE.md)** - **NEW** Windows build scripts guide ✨
-- **[MAKEFILE_QUICK_REF.md](MAKEFILE_QUICK_REF.md)** - Quick reference for Makefile commands
-- **[VERSION_MANAGEMENT.md](VERSION_MANAGEMENT.md)** - Version management workflow
+- **[Development Guide](docs/development/README.md)** - Complete development workflow
+- **[Version Management](docs/development/VERSION_MANAGEMENT.md)** - Release and version management
 
-#### Troubleshooting
-- **[TROUBLESHOOTING_VERSIONS.md](TROUBLESHOOTING_VERSIONS.md)** - Fix version and tagging issues
-- **[VENDOR_PUBLISH_FIX.md](VENDOR_PUBLISH_FIX.md)** - Resolve asset publishing problems
+### 🐛 Troubleshooting
 
-### Project Information
+- **[Troubleshooting Guide](docs/troubleshooting/README.md)** - Complete troubleshooting and fixes
+
+### 📋 Project Information
+
 - **[CHANGELOG.md](CHANGELOG.md)** - Version history and changes
 
 ## 🔧 Key Features
@@ -128,26 +121,27 @@ use Tpl\Shared\Services\BiblioSsoService;
 Route::get('/auth/callback', function (BiblioSsoService $biblioSso) {
     // Get session from cookie
     $sessionId = getRawCookie('biblioSession');
-    
+
     // Validate and fetch user profile
     $profile = $biblioSso->fetchUserProfile($sessionId);
-    
+
     if ($profile) {
         // Create/update user and log them in
         $user = User::updateOrCreate(
             ['email' => $profile['borrower']['email']],
             ['name' => $profile['borrower']['name']]
         );
-        
+
         Auth::login($user);
         return redirect()->route('dashboard');
     }
-    
+
     return redirect()->route('login')->with('error', 'Authentication failed');
 });
 ```
 
 **Features:**
+
 - ✅ Session validation
 - ✅ Borrower info retrieval
 - ✅ Complete user profile fetching
@@ -230,6 +224,7 @@ php artisan test --filter=BiblioSso
 ```
 
 **Test Statistics:**
+
 - BiblioSsoService: 8 tests
 - CookieUtils: 10 tests
 - Integration: 4 tests
@@ -383,11 +378,13 @@ Add to your `config/services.php`:
 **⚡ Quick Fix:** See [QUICK_FIX_BIBLIOCOMMONS.md](QUICK_FIX_BIBLIOCOMMONS.md) for a 5-minute solution.
 
 **Run diagnostic:**
+
 ```bash
 php artisan bibliocommons:diagnose
 ```
 
 **Detailed guides:**
+
 - [FIX_HOST_APP_SETUP.md](FIX_HOST_APP_SETUP.md) - Step-by-step fix guide
 - [TROUBLESHOOTING_HOST_APP.md](TROUBLESHOOTING_HOST_APP.md) - Comprehensive troubleshooting
 
@@ -396,6 +393,7 @@ php artisan bibliocommons:diagnose
 See [TROUBLESHOOTING_VERSIONS.md](TROUBLESHOOTING_VERSIONS.md) for detailed solutions.
 
 **Quick fix:**
+
 ```bash
 composer clear-cache
 composer update tpl/shared
@@ -406,6 +404,7 @@ composer update tpl/shared
 See [VENDOR_PUBLISH_FIX.md](VENDOR_PUBLISH_FIX.md) for solutions.
 
 **Quick fix:**
+
 ```bash
 php artisan vendor:publish --tag=tpl-shared-assets --force
 ```
@@ -448,21 +447,21 @@ Proprietary. All rights reserved.
 
 ### I want to...
 
-- **Install the package** → [INSTALL.md](INSTALL.md)
-- **Use BiblioCommons SSO** → [BIBLIOSSO_USAGE.md](BIBLIOSSO_USAGE.md)
-- **Set up Laravel Auth** → [AUTH_PROVIDER_GUIDE.md](AUTH_PROVIDER_GUIDE.md) ⭐
-- **Use middleware** → [MIDDLEWARE_GUIDE.md](MIDDLEWARE_GUIDE.md)
-- **Read external cookies** → See [Cookie Utilities](#cookie-utilities) above
-- **Publish assets** → [PUBLISHING.md](PUBLISHING.md)
-- **Create a new version** → [MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md)
-- **Fix version issues** → [TROUBLESHOOTING_VERSIONS.md](TROUBLESHOOTING_VERSIONS.md)
-- **Develop the package** → [PACKAGE_DEV_NOTES.md](PACKAGE_DEV_NOTES.md)
+- **Install the package** → [Installation Guide](docs/installation/README.md)
+- **Use BiblioCommons SSO** → [BiblioCommons Guide](docs/features/bibliocommons.md)
+- **Set up Laravel Auth** → [Authentication Setup](docs/features/bibliocommons.md#authentication-system)
+- **Use templates** → [Template Integration](docs/features/bibliocommons.md#template-system)
+- **Read external cookies** → [Cookie Utilities](docs/features/bibliocommons.md#cookie-utilities)
+- **Develop the package** → [Development Guide](docs/development/README.md)
+- **Create a new version** → [Version Management](docs/development/VERSION_MANAGEMENT.md)
+- **Fix issues** → [Troubleshooting Guide](docs/troubleshooting/README.md)
 - **See what changed** → [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
 **Built with ❤️ for Toronto Public Library**
-```
+
+````
 
 ### Option 2: SSH Keys
 
@@ -470,7 +469,7 @@ Ensure your SSH key is added to GitHub and your SSH agent is running:
 
 ```bash
 ssh-add ~/.ssh/id_rsa
-```
+````
 
 ## Usage
 
@@ -479,6 +478,7 @@ ssh-add ~/.ssh/id_rsa
 This package includes BiblioCommons header/footer integration for TPL library applications.
 
 **Quick Start:**
+
 1. Configure API URL in `config/services.php`
 2. Use `<x-tpl-shared::static-layout>` in your views
 3. Done! Templates are fetched and cached automatically.
@@ -498,7 +498,7 @@ Use package views in your Blade templates:
 After publishing assets, import components in your React/Inertia pages:
 
 ```tsx
-import { SomeComponent } from '@/vendor/tpl-shared/js/components/SomeComponent'
+import { SomeComponent } from '@/vendor/tpl-shared/js/components/SomeComponent';
 ```
 
 ### Routes
@@ -508,4 +508,3 @@ The package automatically registers routes from `routes/web.php`. Check register
 ```bash
 php artisan route:list
 ```
-
