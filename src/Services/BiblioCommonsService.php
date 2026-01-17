@@ -36,10 +36,14 @@ class BiblioCommonsService
     /**
      * Location IDs that represent services rather than physical branches.
      *
+     * Note: HLS (Home Library Service) and Bookmobile (BKONE) are intentionally excluded
+     * from this list so they appear in branch listings.
+     *
      * @var array<int, string>
      */
     public const SERVICE_LOCATION_IDS = [
-        'HLS',    // Home Library Service
+        // 'HLS',    // Home Library Service - removed to include in branches
+        // 'BKONE',  // Bookmobile - removed to include in branches
         'IBBY',   // IBBY (duplicate of North York Central)
     ];
 
@@ -224,8 +228,8 @@ class BiblioCommonsService
             $collection = $copy['collection'] ?? '';
 
             if ($locationId === self::STACKS_LOCATION_ID
-                && str_contains($statusId, self::STACKS_AVAILABLE_STATUS)
-                && str_contains($collection, self::STACKS_COLLECTION_IDENTIFIER)) {
+            && str_contains($statusId, self::STACKS_AVAILABLE_STATUS)
+            && str_contains($collection, self::STACKS_COLLECTION_IDENTIFIER)) {
                 return $copy;
             }
         }
@@ -408,6 +412,7 @@ class BiblioCommonsService
      *     namePattern?: string,
      *     excludeStacks?: bool,
      *     excludeServices?: bool,
+     *     excludeSpecialCollections?: bool,
      *     branchesOnly?: bool,
      * }  $options  Filtering options
      * @param  string|null  $libraryId  Library ID (defaults to configured library)
@@ -476,11 +481,12 @@ class BiblioCommonsService
     }
 
     /**
-     * Get only physical branch locations (excluding stacks and services).
+     * Get only physical branch locations (excluding stacks, services, and special collections).
      *
      * This is a convenience method that filters out:
      * - Stacks locations (TRLS, SACDS, SARS, SBRS)
-     * - Service locations (HLS, IBBY)
+     * - Service locations (HLS, IBBY) - Note: HLS and Bookmobile are now included in branches
+     * - Special Collections locations
      *
      * @param  array{
      *     locale?: string,
@@ -496,6 +502,7 @@ class BiblioCommonsService
     public function getBranches(array $options = [], ?string $libraryId = null): ?array
     {
         $options['branchesOnly'] = true;
+        $options['excludeSpecialCollections'] = true;
 
         return $this->getLocations($options, $libraryId);
     }
@@ -541,6 +548,7 @@ class BiblioCommonsService
      *     namePattern?: string,
      *     excludeStacks?: bool,
      *     excludeServices?: bool,
+     *     excludeSpecialCollections?: bool,
      *     branchesOnly?: bool,
      * }  $options
      * @return array<int, array{id: string, name: string}>
@@ -574,6 +582,15 @@ class BiblioCommonsService
 
             // Exclude service locations
             if (($options['excludeServices'] ?? false) && in_array($id, self::SERVICE_LOCATION_IDS, true)) {
+                return false;
+            }
+
+            // Exclude special collections locations
+            if (($options['excludeSpecialCollections'] ?? false) && (
+                str_contains($name, 'Special Collections') ||
+                str_contains($name, 'Special Art Room Stacks') ||
+                str_contains($name, 'Special Baldwin Room Stacks')
+            )) {
                 return false;
             }
 

@@ -377,6 +377,10 @@ it('gets branches only', function (): void {
                     'id' => 'HLS',
                     'name' => 'Home Library Service',
                 ],
+                [
+                    'id' => 'BKONE',
+                    'name' => 'Bookmobile',
+                ],
             ],
         ], 200),
     ]);
@@ -385,15 +389,18 @@ it('gets branches only', function (): void {
     $result = $service->getBranches();
 
     expect($result)->toBeArray()
-        ->and($result['locations'])->toHaveCount(1)
-        ->and($result['locations'][0]['id'])->toBe('TRL');
+        ->and($result['locations'])->toHaveCount(3) // HLS and Bookmobile now included in branches
+        ->and($result['locations'][0]['id'])->toBe('TRL')
+        ->and($result['locations'][1]['id'])->toBe('HLS')
+        ->and($result['locations'][2]['id'])->toBe('BKONE');
 });
 
 it('determines location type correctly', function (): void {
     $service = app(BiblioCommonsService::class);
 
     expect($service->getLocationType('TRLS'))->toBe('Stacks');
-    expect($service->getLocationType('HLS'))->toBe('Service');
+    expect($service->getLocationType('HLS'))->toBe('Branch'); // HLS now treated as branch
+    expect($service->getLocationType('BKONE'))->toBe('Branch'); // Bookmobile now treated as branch
     expect($service->getLocationType('TRL'))->toBe('Branch');
 });
 
