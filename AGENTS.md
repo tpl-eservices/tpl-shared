@@ -52,32 +52,39 @@ npm run build
 npm run build:ssr
 ```
 
-### Package Development (Unix/Linux/Mac)
+### Package Development (Artisan Commands)
 
 ```bash
 # Complete release workflow
-make release
+php artisan tpl-shared:build release
 
 # Individual version management
-make tag-patch    # 0.1.0 → 0.1.1
-make tag-minor    # 0.1.0 → 0.2.0
-make tag-major    # 0.1.0 → 1.0.0
+php artisan tpl-shared:build tag-patch    # 0.1.0 → 0.1.1
+php artisan tpl-shared:build tag-minor    # 0.1.0 → 0.2.0
+php artisan tpl-shared:build tag-major    # 0.1.0 → 1.0.0
 
 # Development commands
-make test         # Run tests
-make format       # Format PHP code
-make status       # Check current state
+php artisan tpl-shared:build test         # Run tests
+php artisan tpl-shared:build format       # Format PHP code
+php artisan tpl-shared:build build        # Build frontend assets
+php artisan tpl-shared:build status       # Check current state
+php artisan tpl-shared:build push         # Push to GitHub
+php artisan tpl-shared:build clean        # Clean dependencies
+php artisan tpl-shared:build install      # Install dependencies
+
+# Show help
+php artisan tpl-shared:build help
 ```
 
-### Windows Development
+### Legacy Build Scripts (Deprecated)
 
-```bash
-# PowerShell (recommended)
-.\build.ps1 release
+The following scripts have been replaced by the Artisan command and are deprecated:
 
-# Batch script
-build release
-```
+- Unix/Linux: `make` commands → `php artisan tpl-shared:build`
+- Windows PowerShell: `.\build.ps1` → `php artisan tpl-shared:build`
+- Windows Batch: `build.bat` → `php artisan tpl-shared:build`
+
+The Artisan command provides identical functionality with better cross-platform compatibility.
 
 ### Code Quality
 
@@ -576,6 +583,9 @@ php artisan tpl-shared:clear-cache
 php artisan vendor:publish --tag=tpl-shared-assets
 php artisan vendor:publish --tag=tpl-shared-config
 php artisan vendor:publish --tag=tpl-shared-views
+
+# Build management (for package development)
+php artisan tpl-shared:build help        # Show all build commands
 ```
 
 ## Environment Variables
@@ -604,15 +614,14 @@ BIBLIOCOMMONS_API_URL=https://tpl.bibliocommons.com/api/external-templates
 ### Version Management Workflow
 
 ```bash
-# Using Makefile (Unix/Linux/Mac)
-make tag-patch    # 0.1.0 → 0.1.1
-make tag-minor    # 0.1.0 → 0.2.0
-make tag-major    # 0.1.0 → 1.0.0
+# Using Artisan command (recommended)
+php artisan tpl-shared:build tag-patch    # 0.1.0 → 0.1.1
+php artisan tpl-shared:build tag-minor    # 0.1.0 → 0.2.0
+php artisan tpl-shared:build tag-major    # 0.1.0 → 1.0.0
 
-# Using PowerShell (Windows)
-.\build.ps1 tag-patch
-.\build.ps1 tag-minor
-.\build.ps1 tag-major
+# Legacy scripts (deprecated)
+# make tag-patch (Unix/Linux)  → php artisan tpl-shared:build tag-patch
+# .\build.ps1 tag-patch (Windows) → php artisan tpl-shared:build tag-patch
 ```
 
 ### Host Application Testing

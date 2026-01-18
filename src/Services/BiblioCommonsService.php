@@ -449,6 +449,9 @@ class BiblioCommonsService
             /** @var array{locations: array<int, array{id: string, name: string}>} $data */
             $data = $response->json();
 
+            // Merge additional branches (before filtering)
+            $data['locations'] = $this->mergeAdditionalBranches($data['locations']);
+
             // Apply client-side filters
             $data['locations'] = $this->filterLocations($data['locations'], $options);
 
@@ -534,6 +537,36 @@ class BiblioCommonsService
         }
 
         return 'Branch';
+    }
+
+    /**
+     * Merge additional branches from configuration into the locations list.
+     *
+     * @param  array<int, array{id: string, name: string}>  $locations
+     * @return array<int, array{id: string, name: string}>
+     */
+    private function mergeAdditionalBranches(array $locations): array
+    {
+        $additionalBranches = config('services.bibliocommons.additional_branches', []);
+
+        if (empty($additionalBranches)) {
+            return $locations;
+        }
+
+        $existingIds = array_column($locations, 'id');
+        $mergedLocations = $locations;
+
+        foreach ($additionalBranches as $branch) {
+            // Only add if not already present in the API response
+            if (! in_array($branch['id'], $existingIds, true)) {
+                $mergedLocations[] = [
+                    'id' => $branch['id'],
+                    'name' => $branch['name'],
+                ];
+            }
+        }
+
+        return $mergedLocations;
     }
 
     /**

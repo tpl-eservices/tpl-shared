@@ -11,6 +11,7 @@ use Tpl\Shared\Auth\BiblioUserProvider;
 use Tpl\Shared\Console\Commands\ClearBiblioCommonsCache;
 use Tpl\Shared\Console\Commands\DiagnoseBiblioCommons;
 use Tpl\Shared\Console\Commands\InstallTplShared;
+use Tpl\Shared\Console\Commands\TplSharedBuild;
 use Tpl\Shared\Console\Commands\UninstallTplShared;
 use Tpl\Shared\Services\BiblioCommonsService;
 use Tpl\Shared\Services\BiblioCommonsTemplateService;
@@ -87,6 +88,7 @@ class SharedServiceProvider extends ServiceProvider
                 ClearBiblioCommonsCache::class,
                 DiagnoseBiblioCommons::class,
                 InstallTplShared::class,
+                TplSharedBuild::class,
                 UninstallTplShared::class,
             ]);
         }
