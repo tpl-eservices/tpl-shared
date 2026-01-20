@@ -9,12 +9,14 @@
         "laravel/framework": "^12.0"
     },
     "require-dev": {
-        "pestphp/pest": "^4.0",
+        "larastan/larastan": "^3.0",
         "laravel/pint": "^1.0",
-        "orchestra/testbench": "^10.0"
+        "orchestra/testbench": "^10.0",
+        "pestphp/pest": "^4.0"
     },
     "scripts": {
         "test": "pest",
+        "analyse": "phpstan analyse --memory-limit=512M",
         "format": "pint",
         "format:check": "pint --test"
     },
