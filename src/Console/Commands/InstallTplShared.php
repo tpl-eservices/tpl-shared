@@ -596,6 +596,7 @@ PHP;
         'api_url' => env('DXSERVICES_API_URL', 'https://dxservices.tpl.ca'),
         'customer_service_url' => env('DXSERVICES_CUSTOMER_SERVICE_URL', 'https://dxservices.tpl.ca'),
         'api_key' => env('DXSERVICES_API_KEY'),
+        'renewal_url' => env('DXSERVICES_RENEWAL_URL', 'https://membership.tpl.ca'),
     ],
 PHP;
     }

@@ -1,8 +1,15 @@
 {
     "name": "tpl/shared",
-    "description": "Shared package for multiple Laravel apps",
+    "description": "Shared Laravel package for library systems with BiblioCommons SSO integration",
     "type": "library",
     "license": "proprietary",
+    "keywords": ["laravel", "bibliocommons", "sso", "library", "authentication"],
+    "homepage": "https://github.com/tpl-eservices/tpl-shared",
+    "authors": [
+        {
+            "name": "Toronto Public Library"
+        }
+    ],
     "version": "0.1.30",
     "require": {
         "php": "^8.4",
