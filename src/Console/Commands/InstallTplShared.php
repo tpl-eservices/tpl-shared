@@ -29,6 +29,8 @@ class InstallTplShared extends Command
 
     /**
      * Installation status tracking.
+     *
+     * @var array<string, string|bool>
      */
     protected array $status = [
         'services_config' => false,
@@ -40,6 +42,8 @@ class InstallTplShared extends Command
 
     /**
      * Modified files list.
+     *
+     * @var array<int, string>
      */
     protected array $modifiedFiles = [];
 
@@ -270,9 +274,13 @@ class InstallTplShared extends Command
                     }
 
                     $newContent = $matches[1].$newCallback.$matches[3];
-                    $content = preg_replace($pattern, $newContent, $content);
+                    $updatedContent = preg_replace($pattern, $newContent, $content);
 
-                    File::put($bootstrapFile, $content);
+                    if ($updatedContent === null) {
+                        return false;
+                    }
+
+                    File::put($bootstrapFile, $updatedContent);
                     $this->modifiedFiles[] = $bootstrapFile;
                     $this->status['bootstrap_app'] = 'modified';
 
@@ -323,6 +331,10 @@ class InstallTplShared extends Command
                     $matches[1]."\n".$properties,
                     $content
                 );
+
+                if ($newContent === null) {
+                    return false;
+                }
 
                 File::put($userModel, $newContent);
                 $this->modifiedFiles[] = $userModel;
@@ -493,11 +505,11 @@ class InstallTplShared extends Command
         $this->table(
             ['Component', 'Status'],
             [
-                ['config/services.php', $this->formatStatus($this->status['services_config'] ?: 'failed')],
-                ['config/auth.php', $this->formatStatus($this->status['auth_config'] ?: 'failed')],
-                ['bootstrap/app.php', $this->formatStatus($this->status['bootstrap_app'] ?: 'failed')],
-                ['app/Models/User.php', $this->formatStatus($this->status['user_model'] ?: 'failed')],
-                ['.env', $this->formatStatus($this->status['env_file'] ?: 'failed')],
+                ['config/services.php', $this->formatStatus(is_string($this->status['services_config']) ? $this->status['services_config'] : 'failed')],
+                ['config/auth.php', $this->formatStatus(is_string($this->status['auth_config']) ? $this->status['auth_config'] : 'failed')],
+                ['bootstrap/app.php', $this->formatStatus(is_string($this->status['bootstrap_app']) ? $this->status['bootstrap_app'] : 'failed')],
+                ['app/Models/User.php', $this->formatStatus(is_string($this->status['user_model']) ? $this->status['user_model'] : 'failed')],
+                ['.env', $this->formatStatus(is_string($this->status['env_file']) ? $this->status['env_file'] : 'failed')],
             ]
         );
 
@@ -771,7 +783,9 @@ ENV;
             $arrayContent = $matches[2];
             $newArrayContent = $arrayContent."\n".$newContent."\n";
 
-            return preg_replace($pattern, '$1'.$newArrayContent.'$3', $content);
+            $result = preg_replace($pattern, '$1'.$newArrayContent.'$3', $content);
+
+            return $result ?? $content;
         }
 
         return $content;

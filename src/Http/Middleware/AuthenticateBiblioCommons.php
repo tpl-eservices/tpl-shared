@@ -49,8 +49,7 @@ class AuthenticateBiblioCommons
 
         if ($user) {
             Log::info('User authenticated via BiblioCommons', [
-                'user_id' => $user->id,
-                'user_name' => $user->name,
+                'user_id' => $user->getAuthIdentifier(),
             ]);
 
             // Optionally log into default session guard

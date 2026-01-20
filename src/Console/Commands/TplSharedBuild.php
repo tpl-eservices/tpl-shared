@@ -22,6 +22,8 @@ class TplSharedBuild extends Command
 
     /**
      * Available actions.
+     *
+     * @var array<int, string>
      */
     private array $actions = [
         'help',
@@ -44,9 +46,10 @@ class TplSharedBuild extends Command
      */
     public function handle(): int
     {
+        /** @var string $action */
         $action = $this->argument('action') ?? 'help';
 
-        if (! in_array($action, $this->actions)) {
+        if (! in_array($action, $this->actions, true)) {
             $this->error("Unknown action: {$action}");
             $this->newLine();
             $this->showHelp();
@@ -237,19 +240,23 @@ class TplSharedBuild extends Command
         // Update composer.json
         if (File::exists('composer.json')) {
             $content = File::get('composer.json');
-            $content = preg_replace('/"version":\s*"[^"]*"/', "\"version\": \"{$newVersion}\"", $content);
-            File::put('composer.json', $content);
-            $this->info('  ✓ Updated composer.json');
-            $changesMade = true;
+            $updated = preg_replace('/"version":\s*"[^"]*"/', "\"version\": \"{$newVersion}\"", $content);
+            if (is_string($updated)) {
+                File::put('composer.json', $updated);
+                $this->info('  ✓ Updated composer.json');
+                $changesMade = true;
+            }
         }
 
         // Update package.json
         if (File::exists('package.json')) {
             $content = File::get('package.json');
-            $content = preg_replace('/"version":\s*"[^"]*"/', "\"version\": \"{$newVersion}\"", $content);
-            File::put('package.json', $content);
-            $this->info('  ✓ Updated package.json');
-            $changesMade = true;
+            $updated = preg_replace('/"version":\s*"[^"]*"/', "\"version\": \"{$newVersion}\"", $content);
+            if (is_string($updated)) {
+                File::put('package.json', $updated);
+                $this->info('  ✓ Updated package.json');
+                $changesMade = true;
+            }
         }
 
         // Commit version updates if changes were made
@@ -408,18 +415,22 @@ class TplSharedBuild extends Command
 
         if (File::exists('composer.json')) {
             $content = File::get('composer.json');
-            $content = preg_replace('/"version":\s*"[^"]*"/', "\"version\": \"{$version}\"", $content);
-            File::put('composer.json', $content);
-            $this->info('  ✓ Updated composer.json');
-            $changesMade = true;
+            $updated = preg_replace('/"version":\s*"[^"]*"/', "\"version\": \"{$version}\"", $content);
+            if (is_string($updated)) {
+                File::put('composer.json', $updated);
+                $this->info('  ✓ Updated composer.json');
+                $changesMade = true;
+            }
         }
 
         if (File::exists('package.json')) {
             $content = File::get('package.json');
-            $content = preg_replace('/"version":\s*"[^"]*"/', "\"version\": \"{$version}\"", $content);
-            File::put('package.json', $content);
-            $this->info('  ✓ Updated package.json');
-            $changesMade = true;
+            $updated = preg_replace('/"version":\s*"[^"]*"/', "\"version\": \"{$version}\"", $content);
+            if (is_string($updated)) {
+                File::put('package.json', $updated);
+                $this->info('  ✓ Updated package.json');
+                $changesMade = true;
+            }
         }
 
         if ($changesMade) {
@@ -440,8 +451,10 @@ class TplSharedBuild extends Command
 
         if (File::exists('bootstrap/cache')) {
             $files = glob('bootstrap/cache/*.php');
-            foreach ($files as $file) {
-                File::delete($file);
+            if ($files !== false) {
+                foreach ($files as $file) {
+                    File::delete($file);
+                }
             }
         }
 
@@ -511,7 +524,7 @@ class TplSharedBuild extends Command
         $version = ltrim($currentTag, 'v');
         $parts = explode('.', $version);
 
-        $major = (int) ($parts[0] ?? 0);
+        $major = (int) $parts[0];
         $minor = (int) ($parts[1] ?? 0);
         $patch = (int) ($parts[2] ?? 0);
 

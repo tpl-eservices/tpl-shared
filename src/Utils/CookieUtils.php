@@ -22,10 +22,12 @@ class CookieUtils
         // Fallback: parse raw cookie header manually
         $cookieHeader = $request->header('Cookie');
         if ($cookieHeader) {
+            /** @var array<string, string> $cookies */
             $cookies = [];
             parse_str(str_replace('; ', '&', $cookieHeader), $cookies);
+            $value = $cookies[$name] ?? null;
 
-            return $cookies[$name] ?? null;
+            return is_string($value) ? $value : null;
         }
 
         return null;
