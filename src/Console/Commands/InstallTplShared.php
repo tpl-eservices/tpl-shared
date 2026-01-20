@@ -842,6 +842,19 @@ return [
         'library_id' => env('BIBLIOCOMMONS_LIBRARY_ID', 'tpl'),
         'api_url' => env('BIBLIOCOMMONS_API_BASE_URL', 'https://api.bibliocommons.com'),
         'titles_api_key' => env('BIBLIOCOMMONS_TITLES_API_KEY', env('BIBLIOCOMMONS_API_KEY')),
+
+        // Mock authentication for local development (blocked in production)
+        'mock_enabled' => env('BIBLIOCOMMONS_MOCK_ENABLED', false),
+        'mock' => [
+            'user_id' => env('BIBLIOCOMMONS_MOCK_USER_ID', '123456'),
+            'first_name' => env('BIBLIOCOMMONS_MOCK_FIRST_NAME', 'Test'),
+            'last_name' => env('BIBLIOCOMMONS_MOCK_LAST_NAME', 'User'),
+            'email' => env('BIBLIOCOMMONS_MOCK_EMAIL', 'test@example.com'),
+            'barcode' => env('BIBLIOCOMMONS_MOCK_BARCODE', '21385000000001'),
+            'phone' => env('BIBLIOCOMMONS_MOCK_PHONE', '416-123-4567'),
+            'location_id' => env('BIBLIOCOMMONS_MOCK_LOCATION_ID', 'TRL'),
+            'location_name' => env('BIBLIOCOMMONS_MOCK_LOCATION_NAME', 'Toronto Reference Library'),
+        ],
     ],
 
     // TPL Shared - DXServices Configuration
@@ -849,6 +862,7 @@ return [
         'api_url' => env('DXSERVICES_API_URL', 'https://dxservices.tpl.ca'),
         'customer_service_url' => env('DXSERVICES_CUSTOMER_SERVICE_URL', 'https://dxservices.tpl.ca'),
         'api_key' => env('DXSERVICES_API_KEY'),
+        'renewal_url' => env('DXSERVICES_RENEWAL_URL', 'https://membership.tpl.ca'),
     ],
 ];
 PHP;
