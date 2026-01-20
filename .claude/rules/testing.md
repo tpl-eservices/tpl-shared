@@ -11,9 +11,9 @@ All tests use Pest. Create tests with `php artisan make:test --pest {name}`.
 
 - Run minimal tests: `php artisan test --filter=testName`
 - Run file: `php artisan test tests/Feature/ExampleTest.php`
-- Run all: `php artisan test`
-- Parallel: `php artisan test -p` (Use this for frequently running tests after changes and before commits)
-- Code coverage: `herd coverage ./vendor/bin/pest --coverage` (allows code coverage without xdebug et al configured all the time)
+- Run all: `php artisan test` or `composer test`
+- Parallel: `php artisan test -p` (recommended before commits)
+- Static analysis: `composer analyse` (PHPStan level 8)
 
 After changes pass, ask user if they want to run the full suite.
 
@@ -54,19 +54,4 @@ it('validates emails', function (string $email) {
     'james@example.com',
     'taylor@example.com',
 ]);
-```
-
-## Pest 4 Browser Testing
-
-Browser tests live in `tests/Browser/`. Features include:
-- Real browser interaction (click, type, scroll, drag-and-drop)
-- Multiple browsers/viewports
-- Screenshots for debugging
-- `assertNoJavascriptErrors()`, `assertNoConsoleLogs()`
-
-```php
-$page = visit('/login');
-$page->assertSee('Sign In')
-    ->fill('email', 'user@example.com')
-    ->click('Submit');
 ```

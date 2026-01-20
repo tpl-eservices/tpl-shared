@@ -1,6 +1,6 @@
 ---
 paths:
-  - "app/Console/Commands/**"
+  - "src/Console/Commands/**"
   - "routes/console.php"
   - "tests/**/Console/**"
 ---
