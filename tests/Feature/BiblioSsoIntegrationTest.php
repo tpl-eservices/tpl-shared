@@ -29,17 +29,14 @@ it('authenticates user using BiblioCommons session from cookie', function (): vo
     // Simulate BiblioCommons setting a cookie
     $_COOKIE['biblioSession'] = 'test-session-id-from-cookie';
 
-    // Mock the BiblioCommons API responses
+    // Mock the BiblioCommons API responses (service expects session.borrowers structure)
     Http::fake([
         'api.bibliocommons.com/v1/sessions/*' => Http::response([
-            'user' => [
-                'id' => '2412321',
-                'name' => 'testuser',
+            'session' => [
                 'borrowers' => ['tpl' => '123456'],
             ],
         ], 200),
         'api.bibliocommons.com/v1/libraries/*/borrowers/*' => Http::response([
-            'successful' => true,
             'borrower' => [
                 'id' => '123456',
                 'name' => 'John Doe',
@@ -56,7 +53,6 @@ it('authenticates user using BiblioCommons session from cookie', function (): vo
     $profile = $biblioSso->fetchUserProfile($sessionId);
 
     expect($profile)->toBeArray()
-        ->and($profile['successful'])->toBeTrue()
         ->and($profile['borrower']['name'])->toBe('John Doe')
         ->and($profile['borrower']['email'])->toBe('john@example.com');
 });
@@ -67,17 +63,14 @@ it('handles authentication flow with cookie from request header', function (): v
         'HTTP_COOKIE' => 'biblioSession=header-session-id; other=value',
     ]);
 
-    // Mock the BiblioCommons API responses
+    // Mock the BiblioCommons API responses (service expects session.borrowers structure)
     Http::fake([
         'api.bibliocommons.com/v1/sessions/*' => Http::response([
-            'user' => [
-                'id' => '9876543',
-                'name' => 'headeruser',
+            'session' => [
                 'borrowers' => ['tpl' => '654321'],
             ],
         ], 200),
         'api.bibliocommons.com/v1/libraries/*/borrowers/*' => Http::response([
-            'successful' => true,
             'borrower' => [
                 'id' => '654321',
                 'name' => 'Jane Smith',

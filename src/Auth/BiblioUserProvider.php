@@ -65,6 +65,8 @@ class BiblioUserProvider implements UserProvider
      * Retrieve a user by the given credentials.
      *
      * Not used since we don't store users in database.
+     *
+     * @param  array<string, mixed>  $credentials
      */
     public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
@@ -75,6 +77,8 @@ class BiblioUserProvider implements UserProvider
      * Validate a user against the given credentials.
      *
      * For BiblioCommons SSO, validation is handled by BiblioCommons.
+     *
+     * @param  array<string, mixed>  $credentials
      */
     public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
@@ -86,6 +90,8 @@ class BiblioUserProvider implements UserProvider
      * Rehash the user's password if required and supported.
      *
      * Not applicable - no passwords for SSO users.
+     *
+     * @param  array<string, mixed>  $credentials
      */
     public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
     {
@@ -96,21 +102,25 @@ class BiblioUserProvider implements UserProvider
      * Create a User model instance from BiblioCommons API data.
      *
      * Creates a transient user object (not persisted to database).
+     *
+     * @param  array<string, mixed>  $data
      */
     protected function createUserFromApiData(array $data): Authenticatable
     {
         $class = '\\'.ltrim($this->model, '\\');
+        /** @var \Illuminate\Database\Eloquent\Model&Authenticatable $user */
         $user = new $class;
 
         // Map BiblioCommons borrower data to User model
-        $user->id = $data['id'];
-        $user->name = isset($data['first_name'], $data['last_name'])
+        $user->setAttribute('id', $data['id']);
+        $name = isset($data['first_name'], $data['last_name'])
             ? trim($data['first_name'].' '.$data['last_name'])
             : ($data['name'] ?? 'BiblioCommons User');
-        $user->email = $data['email'] ?? '';
-        $user->barcode = $data['barcode'] ?? ''; // BiblioCommons barcode
-        $user->password = ''; // No password for SSO users
-        $user->email_verified_at = now(); // Assume verified through BiblioCommons
+        $user->setAttribute('name', $name);
+        $user->setAttribute('email', $data['email'] ?? '');
+        $user->setAttribute('barcode', $data['barcode'] ?? ''); // BiblioCommons barcode
+        $user->setAttribute('password', ''); // No password for SSO users
+        $user->setAttribute('email_verified_at', now()); // Assume verified through BiblioCommons
 
         // Mark as existing to prevent save attempts
         $user->exists = true;
