@@ -149,6 +149,50 @@ Route::get('/auth/callback', function (BiblioSsoService $biblioSso) {
 - ✅ Comprehensive error handling and logging
 - ✅ Registered as singleton for efficiency
 
+### Mock Authentication (Local Development)
+
+For local development and testing without a real BiblioCommons API connection, enable mock mode:
+
+**1. Enable in `.env`:**
+
+```env
+BIBLIOCOMMONS_MOCK_ENABLED=true
+```
+
+**2. Configure mock user (optional):**
+
+Add to `config/services.php` under the `bibliocommons` key:
+
+```php
+'bibliocommons' => [
+    // ... existing config ...
+    'mock_enabled' => env('BIBLIOCOMMONS_MOCK_ENABLED', false),
+    'mock' => [
+        'user_id' => env('BIBLIOCOMMONS_MOCK_USER_ID', '123456'),
+        'first_name' => env('BIBLIOCOMMONS_MOCK_FIRST_NAME', 'Test'),
+        'last_name' => env('BIBLIOCOMMONS_MOCK_LAST_NAME', 'User'),
+        'email' => env('BIBLIOCOMMONS_MOCK_EMAIL', 'test@example.com'),
+        'barcode' => env('BIBLIOCOMMONS_MOCK_BARCODE', '21385000000001'),
+        'phone' => env('BIBLIOCOMMONS_MOCK_PHONE', '416-123-4567'),
+        'location_id' => env('BIBLIOCOMMONS_MOCK_LOCATION_ID', 'TRL'),
+        'location_name' => env('BIBLIOCOMMONS_MOCK_LOCATION_NAME', 'Toronto Reference Library'),
+    ],
+],
+```
+
+**How it works:**
+
+- When enabled, `FakeBiblioSsoService` is used instead of the real service
+- All API calls return configurable mock data
+- Mock sessions are logged with `[MOCK]` prefix for visibility
+- **Security:** Mock mode is automatically blocked in production environments
+
+**Use cases:**
+
+- Local development without VPN/API access
+- Automated testing in CI pipelines
+- Demo environments
+
 ### Cookie Utilities
 
 Read raw (unencrypted) cookies from external systems:
@@ -225,31 +269,38 @@ php artisan test --filter=BiblioSso
 
 **Test Statistics:**
 
+- BiblioGuard: 12 tests
+- BiblioUserProvider: 11 tests
 - BiblioSsoService: 8 tests
-- CookieUtils: 10 tests
-- Integration: 4 tests
-- Total: 22+ tests (all passing)
+- AuthenticateBiblioCommons Middleware: 10 tests
+- SSO Integration: 15 tests
+- Total: 106 tests, 217 assertions (all passing)
 
 ## 🛠️ Development Workflow
 
 ### For Package Developers
 
+> **Note:** This project uses **pnpm** for package management. npm and yarn are blocked.
+
 ```bash
 # Install dependencies
 composer install
-npm install
+pnpm install
 
 # Run tests
 composer test
+
+# Run static analysis
+composer analyse
 
 # Format code
 composer format
 
 # Build assets
-npm run build
+pnpm build
 
 # Development mode
-npm run dev
+pnpm dev
 ```
 
 ### Version Management
@@ -424,11 +475,12 @@ export default defineConfig({
 
 ## 📊 Package Stats
 
-- **Version:** 0.1.13
+- **Version:** 0.1.30
 - **PHP Version:** 8.4+
 - **Laravel Version:** 12.x
-- **Test Coverage:** 22+ tests passing
-- **Documentation:** 15+ guides
+- **Static Analysis:** PHPStan Level 8
+- **Test Coverage:** 106 tests, 217 assertions
+- **Package Manager:** pnpm (npm/yarn blocked)
 - **License:** Proprietary
 
 ## 🔗 Links
@@ -487,10 +539,12 @@ See [BIBLIOCOMMONS.md](BIBLIOCOMMONS.md) for complete documentation or [BIBLIOCO
 
 ### Views
 
-Use package views in your Blade templates:
+Use package layouts in your Blade templates:
 
 ```blade
-@include('tpl-shared::example')
+<x-tpl-shared::layout title="My Page">
+    <div>Your content here</div>
+</x-tpl-shared::layout>
 ```
 
 ### Components

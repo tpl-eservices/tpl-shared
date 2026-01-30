@@ -22,6 +22,8 @@ class BiblioSsoService
 
     /**
      * Validate a BiblioCommons session ID.
+     *
+     * @return array<string, mixed>|null
      */
     public function validateSession(string $sessionId): ?array
     {
@@ -58,6 +60,8 @@ class BiblioSsoService
 
     /**
      * Fetch borrower information from BiblioCommons API.
+     *
+     * @return array<string, mixed>|null
      */
     public function fetchBorrowerInfo(string $borrowerId): ?array
     {
@@ -102,6 +106,8 @@ class BiblioSsoService
      *         }
      *     }
      * }
+     *
+     * @return array<string, mixed>|null
      */
     public function fetchUserProfile(string $sessionId): ?array
     {
@@ -121,41 +127,5 @@ class BiblioSsoService
         $borrowerId = $sessionData['session']['borrowers'][$this->libraryId];
 
         return $this->fetchBorrowerInfo($borrowerId);
-    }
-
-    /**
-     * Fetches the library branches from BiblioCommons API.
-     */
-    private function getLibraryBranches(): array
-    {
-        // Cache branches for 1 hour (3600 seconds)
-        return Cache::remember('library_branches', 3600, function () {
-            // Fetch locations from BiblioCommons API
-            $response = Http::get(config('services.bibliocommons.api_url').'/libraries/tpl/locations', [
-                'api_key' => config('services.bibliocommons.titles_api_key'),
-            ]);
-
-            if ($response->failed()) {
-                Log::alert('BiblioCommons Locations API failed', [
-                    'status' => $response->status(),
-                    'body' => $response->body(),
-                ]);
-
-                if ($response->failed()) {
-                    Log::alert('BiblioCommons Locations API failed', [
-                        'status' => $response->status(),
-                        'body' => $response->body(),
-                    ]);
-
-                    return [];
-                }
-
-                $data = $response->json();
-
-                return $data['locations'] ?? [];
-            }
-
-            return [];
-        });
     }
 }

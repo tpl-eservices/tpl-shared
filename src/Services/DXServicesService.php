@@ -134,7 +134,7 @@ class DXServicesService
             return [
                 'allowed' => false,
                 'reason' => 'renewal_required',
-                'message' => "Your library card is valid for renewal. Please renew your membership at https://membership.tpl.ca before attempting to {$action}.",
+                'message' => 'Your library card is valid for renewal. Please renew your membership at '.config('services.dxservices.renewal_url', 'https://membership.tpl.ca')." before attempting to {$action}.",
             ];
         }
 

@@ -40,7 +40,7 @@ jobs:
   code-quality:
     runs-on: ubuntu-latest
 
-    name: Code Quality (Pint)
+    name: Code Quality (Pint & PHPStan)
 
     steps:
       - name: Checkout code
@@ -59,6 +59,9 @@ jobs:
       - name: Check code style
         run: composer format:check
 
+      - name: Run static analysis
+        run: composer analyse
+
   frontend:
     runs-on: ubuntu-latest
 
@@ -75,8 +78,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Install dependencies
         run: pnpm install
@@ -87,9 +88,7 @@ jobs:
       - name: Check formatting
         run: pnpm format:check
 
-      - name: Check TypeScript
-        run: pnpm types
-
-      # Note: Skip `pnpm build` in CI for packages as it requires Laravel context
-      # Host apps will build package assets when they compile their own assets
+      # Note: Skip `pnpm types` and `pnpm build` in CI for packages
+      # These require Laravel-generated files (@/routes from Wayfinder/Ziggy)
+      # that only exist in host app context. Host apps will check types when building.
 

@@ -1,3 +1,4 @@
+/.phpstan.cache
 /.phpunit.cache
 /bootstrap/ssr
 /node_modules
@@ -18,6 +19,8 @@
 Homestead.json
 Homestead.yaml
 npm-debug.log
+package-lock.json
+yarn.lock
 yarn-error.log
 
 # Development-only config files (not published to host apps)
@@ -27,7 +30,6 @@ yarn-error.log
 # Development-only app files (not published to host apps)
 /app-dev/
 !/app-dev/README.md
-yarn-error.log
 /auth.json
 /.fleet
 /.idea

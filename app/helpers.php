@@ -13,7 +13,11 @@ if (! function_exists('tplSharedAsset')) {
         if (! file_exists($manifestPath)) {
             return null;
         }
-        $manifest = json_decode(file_get_contents($manifestPath), true);
+        $contents = file_get_contents($manifestPath);
+        if ($contents === false) {
+            return null;
+        }
+        $manifest = json_decode($contents, true);
         foreach ($manifest as $entry) {
             if (isset($entry['file']) && str_ends_with($entry['file'], '.'.$extension)) {
                 return asset('vendor/tpl-shared/build/'.$entry['file']);
