@@ -2,8 +2,8 @@
 
 namespace Tpl\Shared\Services;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Tpl\Shared\Services\Concerns\MakesHttpRequests;
 
 /**
@@ -424,7 +424,7 @@ class BiblioCommonsService
         $libraryId ??= config('services.bibliocommons.library_id', 'tpl');
 
         // Generate a cache key based on libraryId and options (locale is most relevant)
-        $cacheKey = 'bibliocommons.locations.' . $libraryId . '.' . (isset($options['locale']) ? $options['locale'] : 'default');
+        $cacheKey = 'bibliocommons.locations.'.$libraryId.'.'.(isset($options['locale']) ? $options['locale'] : 'default');
 
         // Try to get from cache first
         $cached = Cache::get($cacheKey);
