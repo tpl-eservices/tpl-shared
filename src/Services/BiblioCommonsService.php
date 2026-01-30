@@ -3,6 +3,7 @@
 namespace Tpl\Shared\Services;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Tpl\Shared\Services\Concerns\MakesHttpRequests;
 
 /**
@@ -422,6 +423,15 @@ class BiblioCommonsService
     {
         $libraryId ??= config('services.bibliocommons.library_id', 'tpl');
 
+        // Generate a cache key based on libraryId and options (locale is most relevant)
+        $cacheKey = 'bibliocommons.locations.' . $libraryId . '.' . (isset($options['locale']) ? $options['locale'] : 'default');
+
+        // Try to get from cache first
+        $cached = Cache::get($cacheKey);
+        if ($cached !== null) {
+            return $cached;
+        }
+
         try {
             $params = [
                 'api_key' => config('services.bibliocommons.titles_api_key'),
@@ -454,6 +464,9 @@ class BiblioCommonsService
 
             // Apply client-side filters
             $data['locations'] = $this->filterLocations($data['locations'], $options);
+
+            // Cache for 12 hours (720 minutes)
+            Cache::put($cacheKey, $data, now()->addHours(12));
 
             return $data;
         } catch (\Exception $e) {
