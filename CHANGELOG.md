@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.33] - 2026-02-18
+
 ### Added
 - **Mock Authentication Service** ⭐ NEW
   - `FakeBiblioSsoService` for local development and testing without real API
@@ -34,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - pnpm version now read from `package.json` packageManager field
 
 ### Fixed
+- **User Data Null with Typed Properties** - `BiblioUserProvider::createUserFromApiData()` now uses direct property assignment instead of `setAttribute()`, fixing user data returning `null` when the consuming app's User model declares public typed properties (which bypass Eloquent's `__get()` magic)
 - **Windows Path Compatibility** - Fixed `tpl-shared:install` command failing on Windows with "mkdir(): No such file or directory" error
   - Properly normalize Windows path separators (backslashes) to forward slashes when creating backup directories
   - Added test coverage for Windows path handling

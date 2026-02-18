@@ -111,16 +111,19 @@ class BiblioUserProvider implements UserProvider
         /** @var \Illuminate\Database\Eloquent\Model&Authenticatable $user */
         $user = new $class;
 
-        // Map BiblioCommons borrower data to User model
-        $user->setAttribute('id', $data['id']);
+        // Map BiblioCommons borrower data to User model.
+        // Uses direct property assignment instead of setAttribute() for compatibility
+        // with models that declare public typed properties (which bypass Eloquent's __get magic).
+        // Properties are defined by the consuming app's model, not this package.
+        $user->id = $data['id']; // @phpstan-ignore property.notFound
         $name = isset($data['first_name'], $data['last_name'])
             ? trim($data['first_name'].' '.$data['last_name'])
             : ($data['name'] ?? 'BiblioCommons User');
-        $user->setAttribute('name', $name);
-        $user->setAttribute('email', $data['email'] ?? '');
-        $user->setAttribute('barcode', $data['barcode'] ?? ''); // BiblioCommons barcode
-        $user->setAttribute('password', ''); // No password for SSO users
-        $user->setAttribute('email_verified_at', now()); // Assume verified through BiblioCommons
+        $user->name = $name; // @phpstan-ignore property.notFound
+        $user->email = $data['email'] ?? ''; // @phpstan-ignore property.notFound
+        $user->barcode = $data['barcode'] ?? ''; // @phpstan-ignore property.notFound
+        $user->password = ''; // @phpstan-ignore property.notFound
+        $user->email_verified_at = now(); // @phpstan-ignore property.notFound
 
         // Mark as existing to prevent save attempts
         $user->exists = true;

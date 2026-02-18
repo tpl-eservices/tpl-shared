@@ -1,10 +1,31 @@
 <?php
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as AuthenticatableUser;
 use Illuminate\Support\Facades\Http;
 use Tpl\Shared\Auth\BiblioUserProvider;
 use Tpl\Shared\Services\BiblioSsoService;
+
+/**
+ * A test model with public typed properties, simulating how consuming apps
+ * (e.g. tpl-stacks) may declare their User model. Public typed properties
+ * bypass Eloquent's __get() magic, so data must be set via direct assignment.
+ */
+class UserWithTypedProperties extends AuthenticatableUser
+{
+    public ?int $id = null;
+
+    public ?string $name = null;
+
+    public ?string $email = null;
+
+    public ?string $barcode = null;
+
+    public ?string $password = null;
+
+    protected $guarded = [];
+}
 
 beforeEach(function (): void {
     config([
@@ -37,6 +58,34 @@ it('retrieves user by borrower id', function (): void {
         ->and($user->getAttribute('name'))->toBe('John Doe')
         ->and($user->getAttribute('email'))->toBe('john@example.com')
         ->and($user->getAttribute('barcode'))->toBe('29999012345678');
+});
+
+it('populates public typed properties via direct assignment', function (): void {
+    Http::fake([
+        'api.bibliocommons.com/v1/libraries/*/borrowers/*' => Http::response([
+            'borrower' => [
+                'id' => '123456',
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'email' => 'john@example.com',
+                'barcode' => '29999012345678',
+            ],
+        ], 200),
+    ]);
+
+    $biblioSso = app(BiblioSsoService::class);
+    $provider = new BiblioUserProvider($biblioSso, UserWithTypedProperties::class);
+
+    $user = $provider->retrieveById('123456');
+
+    // Direct property access must work — this was broken when setAttribute() was used
+    // because public typed properties bypass Eloquent's __get() magic method
+    expect($user)->toBeInstanceOf(UserWithTypedProperties::class)
+        ->and($user->name)->toBe('John Doe')
+        ->and($user->email)->toBe('john@example.com')
+        ->and($user->barcode)->toBe('29999012345678')
+        ->and($user->password)->toBe('')
+        ->and($user->exists)->toBeTrue();
 });
 
 it('returns null when borrower not found', function (): void {
