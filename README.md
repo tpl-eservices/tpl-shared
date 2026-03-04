@@ -1,223 +1,54 @@
 # TPL Shared Package
 
-A comprehensive shared Laravel package for TPL projects, providing common components, views, assets, and integrations across multiple Laravel applications.
+Shared Laravel package for TPL projects providing BiblioCommons SSO authentication, shared layouts, and common components across multiple Laravel applications.
 
-## 📦 What's Included
+**This is a public repository:** Do not include sensitive information, credentials, or proprietary code here.
 
-- **BiblioCommons Integration** - SSO authentication and user profile management
-- **Cookie Utilities** - Read raw cookies from external systems
-- **Blade Components** - Reusable UI components with BiblioCommons templates
-- **React Components** - Inertia.js powered frontend components
-- **Frontend Assets** - Shared CSS and JavaScript
+## What's Included
+
+- **BiblioCommons SSO** - Authentication via BiblioCommons API (session validation, user profiles, automatic retries)
+- **BiblioCommons Templates** - Fetches and caches TPL header/footer/CSS/JS from BiblioCommons
+- **Blade Components** - Shared layouts (`<x-tpl-shared::layout>`, `<x-tpl-shared::static-layout>`)
+- **Cookie Utilities** - Read raw (unencrypted) cookies from external systems like BiblioCommons
+- **DX Services Integration** - Library card renewal and membership services
 - **Database Migrations** - Common database structures
-- **Configuration** - Centralized settings management
+- **Artisan Commands** - Install wizard, cache clearing, diagnostics
 
-## 🎯 Requirements
+## Requirements
 
-- **PHP** 8.4+
-- **Laravel** 12.x
-- **Node.js** 20+
-- **Tailwind CSS** v4
+- PHP 8.4+
+- Laravel 12.x
 
-## 🚀 Quick Start
+## Installation
 
-For complete installation instructions, see [INSTALL.md](INSTALL.md) or [QUICK_START.md](QUICK_START.md).
-
-### 1. Configure Composer (run once on your machine):\*\*
-
-```bash
-composer config --global github-oauth.github.com YOUR_TOKEN_HERE
-```
-
-### 2. Add Repository to composer.json
-
-```json
-{
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/tpl-eservices/tpl-shared.git"
-        }
-    ]
-}
-```
-
-### 3. Install Package
+### 1. Install the package
 
 ```bash
 composer require tpl/shared:^0.1
 ```
 
-### 4. Run Automated Install Command ✨ NEW
+### 2. Run the install command
 
 ```bash
 php artisan tpl-shared:install
 ```
 
-This automated command will:
+This configures `config/services.php`, `config/auth.php`, middleware, and `.env` variables automatically (with backups of all modified files).
 
-- ✅ Configure `config/services.php` with BiblioCommons settings
-- ✅ Configure `config/auth.php` with biblio guard and provider
-- ✅ Register middleware in `bootstrap/app.php`
-- ✅ Update User model for stateless authentication
-- ✅ Add environment variables to `.env`
-- ✅ Create backups of all modified files
-- ✅ Track installation status
+### 3. Set your environment variables
 
-See [INSTALL_COMMAND.md](INSTALL_COMMAND.md) for complete documentation.
-
-### 5. Update Environment Variables
-
-Edit `.env` and replace placeholder values:
+The install command adds placeholders to `.env`. Update them with real values:
 
 ```env
-BIBLIOCOMMONS_API_BASE_URL=https://api.bibliocommons.com
 BIBLIOCOMMONS_API_KEY=your-actual-api-key
-BIBLIOCOMMONS_LIBRARY_ID=tpl
-BIBLIOCOMMONS_API_URL=https://tpl.bibliocommons.com/api/external-templates
+BIBLIOCOMMONS_TITLES_API_KEY=your-titles-api-key
 ```
 
-> **Note:** The install command already added these to your `.env` file with placeholders. Update them with your actual values.
+See [INSTALL.md](INSTALL.md) for detailed installation instructions.
 
-## 📚 Documentation
+## Usage
 
-### 🚀 Getting Started
-
-- **[Installation Guide](docs/installation/README.md)** - Complete installation instructions
-- **[Quick Start](docs/installation/README.md#quick-start-5-minutes)** - 5-minute setup guide
-
-### 🎯 Core Features
-
-#### BiblioCommons Integration
-
-- **[BiblioCommons Guide](docs/features/bibliocommons.md)** - Complete SSO and template integration
-- **[Authentication Setup](docs/features/bibliocommons.md#quick-start-authentication)** - Laravel authentication provider
-- **[Template Integration](docs/features/bibliocommons.md#quick-start-templates)** - Header/footer integration
-
-### 🛠️ Development
-
-#### Package Development
-
-- **[Development Guide](docs/development/README.md)** - Complete development workflow
-- **[Version Management](docs/development/VERSION_MANAGEMENT.md)** - Release and version management
-
-### 🐛 Troubleshooting
-
-- **[Troubleshooting Guide](docs/troubleshooting/README.md)** - Complete troubleshooting and fixes
-
-### 📋 Project Information
-
-- **[CHANGELOG.md](CHANGELOG.md)** - Version history and changes
-
-## 🔧 Key Features
-
-### BiblioCommons SSO Service
-
-Authenticate users via BiblioCommons API with a simple, Laravel-style API:
-
-```php
-use Tpl\Shared\Services\BiblioSsoService;
-
-Route::get('/auth/callback', function (BiblioSsoService $biblioSso) {
-    // Get session from cookie
-    $sessionId = getRawCookie('biblioSession');
-
-    // Validate and fetch user profile
-    $profile = $biblioSso->fetchUserProfile($sessionId);
-
-    if ($profile) {
-        // Create/update user and log them in
-        $user = User::updateOrCreate(
-            ['email' => $profile['borrower']['email']],
-            ['name' => $profile['borrower']['name']]
-        );
-
-        Auth::login($user);
-        return redirect()->route('dashboard');
-    }
-
-    return redirect()->route('login')->with('error', 'Authentication failed');
-});
-```
-
-**Features:**
-
-- ✅ Session validation
-- ✅ Borrower info retrieval
-- ✅ Complete user profile fetching
-- ✅ Automatic retry logic (2 retries, 500ms delay)
-- ✅ Comprehensive error handling and logging
-- ✅ Registered as singleton for efficiency
-
-### Mock Authentication (Local Development)
-
-For local development and testing without a real BiblioCommons API connection, enable mock mode:
-
-**1. Enable in `.env`:**
-
-```env
-BIBLIOCOMMONS_MOCK_ENABLED=true
-```
-
-**2. Configure mock user (optional):**
-
-Add to `config/services.php` under the `bibliocommons` key:
-
-```php
-'bibliocommons' => [
-    // ... existing config ...
-    'mock_enabled' => env('BIBLIOCOMMONS_MOCK_ENABLED', false),
-    'mock' => [
-        'user_id' => env('BIBLIOCOMMONS_MOCK_USER_ID', '123456'),
-        'first_name' => env('BIBLIOCOMMONS_MOCK_FIRST_NAME', 'Test'),
-        'last_name' => env('BIBLIOCOMMONS_MOCK_LAST_NAME', 'User'),
-        'email' => env('BIBLIOCOMMONS_MOCK_EMAIL', 'test@example.com'),
-        'barcode' => env('BIBLIOCOMMONS_MOCK_BARCODE', '21385000000001'),
-        'phone' => env('BIBLIOCOMMONS_MOCK_PHONE', '416-123-4567'),
-        'location_id' => env('BIBLIOCOMMONS_MOCK_LOCATION_ID', 'TRL'),
-        'location_name' => env('BIBLIOCOMMONS_MOCK_LOCATION_NAME', 'Toronto Reference Library'),
-    ],
-],
-```
-
-**How it works:**
-
-- When enabled, `FakeBiblioSsoService` is used instead of the real service
-- All API calls return configurable mock data
-- Mock sessions are logged with `[MOCK]` prefix for visibility
-- **Security:** Mock mode is automatically blocked in production environments
-
-**Use cases:**
-
-- Local development without VPN/API access
-- Automated testing in CI pipelines
-- Demo environments
-
-### Cookie Utilities
-
-Read raw (unencrypted) cookies from external systems:
-
-```php
-// Simple global helper
-$sessionId = getRawCookie('biblioSession');
-
-// Advanced usage
-use Tpl\Shared\Utils\CookieUtils;
-
-// Check if cookie exists
-if (CookieUtils::hasRaw('biblioSession', $request)) {
-    $value = CookieUtils::getRaw('biblioSession', $request);
-}
-
-// Get multiple cookies
-$cookies = CookieUtils::getRawMany(['session', 'user_id'], $request);
-```
-
-**Why needed?** Laravel encrypts cookies by default. External systems like BiblioCommons set cookies that aren't encrypted, so we need to read them raw.
-
-### Blade Components with BiblioCommons Templates
-
-Use BiblioCommons layouts in your views:
+### Layouts
 
 ```blade
 <x-tpl-shared::layout title="Page Title">
@@ -225,340 +56,68 @@ Use BiblioCommons layouts in your views:
 </x-tpl-shared::layout>
 ```
 
-The package automatically fetches and caches BiblioCommons templates (header, footer, CSS, JS).
-
-### Global Helper Functions
+### SSO Authentication
 
 ```php
-// Get hashed asset from package manifest
-tplSharedAsset('css'); // Returns: /vendor/tpl-shared/build/app-[hash].css
+use Tpl\Shared\Services\BiblioSsoService;
 
-// Get raw cookie value
-getRawCookie('cookieName'); // Bypasses Laravel encryption
+$profile = $biblioSso->fetchUserProfile($sessionId);
 ```
 
-## 📋 Available Commands
+### Cookie Utilities
 
-```bash
- Diagnose BiblioCommons configuration and connectivity
-php artisan bibliocommons:diagnose
-
-# Clear BiblioCommons template cache
-php artisan tpl-shared:clear-cache
-
-# Publish package assets
-php artisan vendor:publish --tag=tpl-shared-assets
-php artisan vendor:publish --tag=tpl-shared-config
-php artisan vendor:publish --tag=tpl-shared-views
+```php
+// Read raw cookies that bypass Laravel encryption
+$sessionId = getRawCookie('biblioSession');
 ```
 
-## 🧪 Testing
+### Mock Authentication (Local Dev)
 
-The package includes comprehensive test coverage:
+Enable mock mode for development without API access:
 
-```bash
-# Run all tests
-composer test
-
-# Run with coverage
-php artisan test --coverage
-
-# Run specific test suite
-php artisan test --filter=BiblioSso
+```env
+BIBLIOCOMMONS_MOCK_ENABLED=true
 ```
 
-**Test Statistics:**
+Mock mode is automatically blocked in production.
 
-- BiblioGuard: 12 tests
-- BiblioUserProvider: 11 tests
-- BiblioSsoService: 8 tests
-- AuthenticateBiblioCommons Middleware: 10 tests
-- SSO Integration: 15 tests
-- Total: 106 tests, 217 assertions (all passing)
-
-## 🛠️ Development Workflow
-
-### For Package Developers
-
-> **Note:** This project uses **pnpm** for package management. npm and yarn are blocked.
+## Artisan Commands
 
 ```bash
-# Install dependencies
-composer install
-pnpm install
+php artisan tpl-shared:install          # Guided setup wizard
+php artisan bibliocommons:diagnose      # Check configuration and connectivity
+php artisan tpl-shared:clear-cache      # Clear template cache
+php artisan vendor:publish --tag=tpl-shared-assets   # Publish frontend assets
+php artisan vendor:publish --tag=tpl-shared-config   # Publish config
+```
 
-# Run tests
-composer test
+## Documentation
 
-# Run static analysis
-composer analyse
+- [Installation Guide](docs/installation/README.md)
+- [BiblioCommons Integration](docs/features/bibliocommons.md)
+- [Development Guide](docs/development/README.md)
+- [Version Management](docs/development/VERSION_MANAGEMENT.md)
+- [Troubleshooting](docs/troubleshooting/README.md)
+- [Changelog](CHANGELOG.md)
 
-# Format code
-composer format
+## Development
 
-# Build assets
-pnpm build
+This project uses **pnpm** for frontend assets (npm/yarn are blocked).
 
-# Development mode
-pnpm dev
+```bash
+composer install && pnpm install    # Install dependencies
+composer test                       # Run tests
+composer analyse                    # PHPStan level 8
+composer format                     # Laravel Pint
+pnpm dev                            # Vite dev server
+pnpm build                          # Build frontend assets
 ```
 
 ### Version Management
 
-Use the Makefile for proper version management:
-
 ```bash
-# Bump patch version (0.1.0 → 0.1.1)
-make tag-patch
-
-# Bump minor version (0.1.0 → 0.2.0)
-make tag-minor
-
-# Bump major version (0.1.0 → 1.0.0)
-make tag-major
-
-# Push tags to GitHub
-make push
-```
-
-See [MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md) for complete details.
-
-## 🔒 Private Repository Access
-
-This is a private repository. Configure authentication:
-
-```bash
-# One-time setup on your machine
-composer config --global github-oauth.github.com YOUR_GITHUB_TOKEN
-```
-
-Get your token at: https://github.com/settings/tokens (requires `repo` scope)
-
-## 📦 Package Structure
-
-```
-tpl-shared/
-├── src/                          # Package source code
-│   ├── Auth/                     # Authentication components
-│   │   ├── BiblioUserProvider.php
-│   │   └── BiblioGuard.php
-│   ├── Services/                 # Service classes
-│   │   ├── BiblioCommonsTemplateService.php
-│   │   └── BiblioSsoService.php
-│   ├── Utils/                    # Utility classes
-│   │   └── CookieUtils.php
-│   ├── Console/                  # Artisan commands
-│   ├── View/                     # Blade components & composers
-│   └── SharedServiceProvider.php # Main service provider
-├── app/                          # Helper functions
-│   └── helpers.php
-├── config/                       # Configuration files
-│   └── shared.php
-├── resources/                    # Frontend assets & views
-│   ├── css/
-│   ├── js/
-│   └── views/
-├── routes/                       # Package routes
-│   └── web.php
-├── tests/                        # Test suite
-│   ├── Feature/
-│   └── Unit/
-└── database/                     # Migrations & seeders
-    └── migrations/
-```
-
-## 🤝 Contributing
-
-### Code Style
-
-The package uses Laravel Pint for code formatting:
-
-```bash
-# Format all files
-vendor/bin/pint
-
-# Check formatting without fixing
-vendor/bin/pint --test
-```
-
-### Pull Request Guidelines
-
-1. Create a feature branch from `main`
-2. Write tests for new features
-3. Ensure all tests pass: `composer test`
-4. Format code: `vendor/bin/pint`
-5. Update CHANGELOG.md
-6. Submit pull request
-
-## 📝 Configuration
-
-### Package Configuration
-
-Publish the config file:
-
-```bash
-php artisan vendor:publish --tag=tpl-shared-config
-```
-
-Edit `config/shared.php`:
-
-```php
-return [
-    'domain' => null, // Domain for package routes
-    'publish_assets' => true, // Toggle asset publishing
-];
-```
-
-### Services Configuration
-
-Add to your `config/services.php`:
-
-```php
-'bibliocommons' => [
-    'external_templates_url' => env('BIBLIOCOMMONS_API_URL'),
-    'api_base_url' => env('BIBLIOCOMMONS_API_BASE_URL'),
-    'api_key' => env('BIBLIOCOMMONS_API_KEY'),
-    'library_id' => env('BIBLIOCOMMONS_LIBRARY_ID', 'tpl'),
-],
-```
-
-## 🐛 Troubleshooting
-
-### BiblioCommons Not Loading
-
-**⚡ Quick Fix:** See [QUICK_FIX_BIBLIOCOMMONS.md](QUICK_FIX_BIBLIOCOMMONS.md) for a 5-minute solution.
-
-**Run diagnostic:**
-
-```bash
-php artisan bibliocommons:diagnose
-```
-
-**Detailed guides:**
-
-- [FIX_HOST_APP_SETUP.md](FIX_HOST_APP_SETUP.md) - Step-by-step fix guide
-- [TROUBLESHOOTING_HOST_APP.md](TROUBLESHOOTING_HOST_APP.md) - Comprehensive troubleshooting
-
-### Composer Can't Find New Versions
-
-See [TROUBLESHOOTING_VERSIONS.md](TROUBLESHOOTING_VERSIONS.md) for detailed solutions.
-
-**Quick fix:**
-
-```bash
-composer clear-cache
-composer update tpl/shared
-```
-
-### Asset Publishing Issues
-
-See [VENDOR_PUBLISH_FIX.md](VENDOR_PUBLISH_FIX.md) for solutions.
-
-**Quick fix:**
-
-```bash
-php artisan vendor:publish --tag=tpl-shared-assets --force
-```
-
-### Vite ENOTFOUND Errors
-
-Update your `vite.config.ts`:
-
-```typescript
-export default defineConfig({
-    server: {
-        host: 'localhost',
-        hmr: { host: 'localhost' },
-    },
-});
-```
-
-## 📊 Package Stats
-
-- **Version:** 0.1.30
-- **PHP Version:** 8.4+
-- **Laravel Version:** 12.x
-- **Static Analysis:** PHPStan Level 8
-- **Test Coverage:** 106 tests, 217 assertions
-- **Package Manager:** pnpm (npm/yarn blocked)
-- **License:** Proprietary
-
-## 🔗 Links
-
-- **Repository:** https://github.com/tpl-eservices/tpl-shared
-- **Issues:** https://github.com/tpl-eservices/tpl-shared/issues
-- **Documentation:** See [docs](#-documentation) section above
-
-## 📄 License
-
-Proprietary. All rights reserved.
-
----
-
-## Quick Links by Task
-
-### I want to...
-
-- **Install the package** → [Installation Guide](docs/installation/README.md)
-- **Use BiblioCommons SSO** → [BiblioCommons Guide](docs/features/bibliocommons.md)
-- **Set up Laravel Auth** → [Authentication Setup](docs/features/bibliocommons.md#authentication-system)
-- **Use templates** → [Template Integration](docs/features/bibliocommons.md#template-system)
-- **Read external cookies** → [Cookie Utilities](docs/features/bibliocommons.md#cookie-utilities)
-- **Develop the package** → [Development Guide](docs/development/README.md)
-- **Create a new version** → [Version Management](docs/development/VERSION_MANAGEMENT.md)
-- **Fix issues** → [Troubleshooting Guide](docs/troubleshooting/README.md)
-- **See what changed** → [CHANGELOG.md](CHANGELOG.md)
-
----
-
-**Built with ❤️ for Toronto Public Library**
-
-````
-
-### Option 2: SSH Keys
-
-Ensure your SSH key is added to GitHub and your SSH agent is running:
-
-```bash
-ssh-add ~/.ssh/id_rsa
-````
-
-## Usage
-
-### BiblioCommons Integration
-
-This package includes BiblioCommons header/footer integration for TPL library applications.
-
-**Quick Start:**
-
-1. Configure API URL in `config/services.php`
-2. Use `<x-tpl-shared::static-layout>` in your views
-3. Done! Templates are fetched and cached automatically.
-
-See [BIBLIOCOMMONS.md](BIBLIOCOMMONS.md) for complete documentation or [BIBLIOCOMMONS_QUICK_REF.md](BIBLIOCOMMONS_QUICK_REF.md) for quick reference.
-
-### Views
-
-Use package layouts in your Blade templates:
-
-```blade
-<x-tpl-shared::layout title="My Page">
-    <div>Your content here</div>
-</x-tpl-shared::layout>
-```
-
-### Components
-
-After publishing assets, import components in your React/Inertia pages:
-
-```tsx
-import { SomeComponent } from '@/vendor/tpl-shared/js/components/SomeComponent';
-```
-
-### Routes
-
-The package automatically registers routes from `routes/web.php`. Check registered routes:
-
-```bash
-php artisan route:list
+make tag-patch    # 0.1.0 -> 0.1.1
+make tag-minor    # 0.1.0 -> 0.2.0
+make tag-major    # 0.1.0 -> 1.0.0
+make push         # Push tags to GitHub
 ```

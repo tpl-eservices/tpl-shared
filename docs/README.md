@@ -1,6 +1,10 @@
-# TPL Shared Package Documentation
+# TPL Shared
 
-Comprehensive documentation for the TPL Shared Laravel package.
+This is a package that is used by Laravel projects that require BiblioCommons authentication and headers consistent with the tpl.ca public website.
+
+You can use composer to install this project in other TPL projects for a shared base of authentication and header styling.
+
+This project is public, and must not include any secrets, personally-identifiable information, or other sensitive or proprietary code.
 
 ## 📋 Documentation Index
 
