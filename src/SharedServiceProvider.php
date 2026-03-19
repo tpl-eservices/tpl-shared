@@ -19,7 +19,6 @@ use Tpl\Shared\Services\BiblioCommonsTemplateService;
 use Tpl\Shared\Services\BiblioSsoService;
 use Tpl\Shared\Services\DXServicesService;
 use Tpl\Shared\Services\FakeBiblioSsoService;
-use Tpl\Shared\View\Components\Layout;
 use Tpl\Shared\View\Composers\BiblioCommonsComposer;
 
 class SharedServiceProvider extends ServiceProvider
@@ -60,12 +59,10 @@ class SharedServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Register BiblioCommons authentication provider
-        Auth::provider('biblio', function ($app, array $config) {
-            return new BiblioUserProvider(
-                $app->make(BiblioSsoService::class),
-                $config['model']
-            );
-        });
+        Auth::provider('biblio', fn ($app, array $config) => new BiblioUserProvider(
+            $app->make(BiblioSsoService::class),
+            $config['model']
+        ));
 
         // Register BiblioCommons authentication guard
         Auth::extend('biblio', function ($app, $name, array $config) {
@@ -130,7 +127,7 @@ class SharedServiceProvider extends ServiceProvider
      *
      * Security: Requires ALL conditions to be met:
      * 1. Explicitly enabled via config (BIBLIOCOMMONS_MOCK_ENABLED=true)
-     * 2. Environment is local or testing
+     * 2. Environment is local, testing, or staging
      */
     protected function shouldUseMockBiblioCommons(): bool
     {
@@ -139,8 +136,8 @@ class SharedServiceProvider extends ServiceProvider
             return false;
         }
 
-        // Layer 2: Environment check - only allow in local/testing
-        if (! $this->app->environment(['local', 'testing'])) {
+        // Layer 2: Environment check - only allow in local/testing/staging
+        if (! $this->app->environment(['local', 'testing', 'staging'])) {
             Log::critical('[TPL-SHARED SECURITY] BiblioCommons mock mode attempted in non-dev environment - BLOCKED');
 
             return false;

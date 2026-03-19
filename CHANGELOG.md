@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.34] - 2026-03-19
+
+### Fixed
+- **Staging environment mock support** - `shouldUseMockBiblioCommons()` now allows `staging` in addition to `local` and `testing` environments
+- **Unused import** - Removed unused `Layout` import from `SharedServiceProvider`
+
+### Changed
+- **EditorConfig** - Set default indent to 4 spaces (PSR-12), with 2-space override for JS/TS/CSS/JSON
+
+### Added
+- **SharedServiceProvider tests** - Tests for Blade component namespace registration and staging environment mock support (109 tests, 229 assertions)
+
 ## [0.1.33] - 2026-02-18
 
 ### Added
