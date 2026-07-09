@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Tpl\Shared\Utils\CookieUtils;
 
 if (! function_exists('tplSharedAsset')) {
@@ -35,7 +36,7 @@ if (! function_exists('getRawCookie')) {
      * This is useful for reading cookies set by external systems (like BiblioCommons)
      * that are not encrypted by Laravel.
      */
-    function getRawCookie(string $name, ?\Illuminate\Http\Request $request = null): ?string
+    function getRawCookie(string $name, ?Request $request = null): ?string
     {
         $request = $request ?? request();
 
