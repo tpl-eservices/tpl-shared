@@ -4,6 +4,7 @@ namespace Tpl\Shared\Auth;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Database\Eloquent\Model;
 use Tpl\Shared\Services\BiblioSsoService;
 
 class BiblioUserProvider implements UserProvider
@@ -108,7 +109,7 @@ class BiblioUserProvider implements UserProvider
     protected function createUserFromApiData(array $data): Authenticatable
     {
         $class = '\\'.ltrim($this->model, '\\');
-        /** @var \Illuminate\Database\Eloquent\Model&Authenticatable $user */
+        /** @var Model&Authenticatable $user */
         $user = new $class;
 
         // Map BiblioCommons borrower data to User model.

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Tpl\Shared\Console\Commands\InstallTplShared;
 
 beforeEach(function () {
     // Clean up any test files
@@ -53,9 +54,9 @@ it('handles windows paths correctly when creating backups', function () {
     File::put($testFile, '<?php return [];');
 
     // Use reflection to test the createBackup method
-    $command = new \Tpl\Shared\Console\Commands\InstallTplShared;
+    $command = new InstallTplShared;
 
-    $reflection = new \ReflectionClass($command);
+    $reflection = new ReflectionClass($command);
     $method = $reflection->getMethod('createBackup');
     $method->setAccessible(true);
 
