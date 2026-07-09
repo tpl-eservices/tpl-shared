@@ -1,9 +1,14 @@
 {
     "$schema": "https://www.schemastore.org/package.json",
     "name": "@tpl/shared",
-    "version": "0.1.27",
+    "version": "0.1.32",
     "type": "module",
+    "packageManager": "pnpm@9.15.4",
+    "engines": {
+        "node": ">=20"
+    },
     "scripts": {
+        "preinstall": "npx only-allow pnpm",
         "build": "vite build",
         "build:ssr": "vite build && vite build --ssr",
         "dev": "vite",

@@ -65,6 +65,8 @@ class BiblioUserProvider implements UserProvider
      * Retrieve a user by the given credentials.
      *
      * Not used since we don't store users in database.
+     *
+     * @param  array<string, mixed>  $credentials
      */
     public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
@@ -75,6 +77,8 @@ class BiblioUserProvider implements UserProvider
      * Validate a user against the given credentials.
      *
      * For BiblioCommons SSO, validation is handled by BiblioCommons.
+     *
+     * @param  array<string, mixed>  $credentials
      */
     public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
@@ -86,6 +90,8 @@ class BiblioUserProvider implements UserProvider
      * Rehash the user's password if required and supported.
      *
      * Not applicable - no passwords for SSO users.
+     *
+     * @param  array<string, mixed>  $credentials
      */
     public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
     {
@@ -96,21 +102,28 @@ class BiblioUserProvider implements UserProvider
      * Create a User model instance from BiblioCommons API data.
      *
      * Creates a transient user object (not persisted to database).
+     *
+     * @param  array<string, mixed>  $data
      */
     protected function createUserFromApiData(array $data): Authenticatable
     {
         $class = '\\'.ltrim($this->model, '\\');
+        /** @var \Illuminate\Database\Eloquent\Model&Authenticatable $user */
         $user = new $class;
 
-        // Map BiblioCommons borrower data to User model
-        $user->id = $data['id'];
-        $user->name = isset($data['first_name'], $data['last_name'])
+        // Map BiblioCommons borrower data to User model.
+        // Uses direct property assignment instead of setAttribute() for compatibility
+        // with models that declare public typed properties (which bypass Eloquent's __get magic).
+        // Properties are defined by the consuming app's model, not this package.
+        $user->id = $data['id']; // @phpstan-ignore property.notFound
+        $name = isset($data['first_name'], $data['last_name'])
             ? trim($data['first_name'].' '.$data['last_name'])
             : ($data['name'] ?? 'BiblioCommons User');
-        $user->email = $data['email'] ?? '';
-        $user->barcode = $data['barcode'] ?? ''; // BiblioCommons barcode
-        $user->password = ''; // No password for SSO users
-        $user->email_verified_at = now(); // Assume verified through BiblioCommons
+        $user->name = $name; // @phpstan-ignore property.notFound
+        $user->email = $data['email'] ?? ''; // @phpstan-ignore property.notFound
+        $user->barcode = $data['barcode'] ?? ''; // @phpstan-ignore property.notFound
+        $user->password = ''; // @phpstan-ignore property.notFound
+        $user->email_verified_at = now(); // @phpstan-ignore property.notFound
 
         // Mark as existing to prevent save attempts
         $user->exists = true;

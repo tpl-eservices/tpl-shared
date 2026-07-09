@@ -22,6 +22,8 @@ class BiblioSsoService
 
     /**
      * Validate a BiblioCommons session ID.
+     *
+     * @return array<string, mixed>|null
      */
     public function validateSession(string $sessionId): ?array
     {
@@ -58,6 +60,8 @@ class BiblioSsoService
 
     /**
      * Fetch borrower information from BiblioCommons API.
+     *
+     * @return array<string, mixed>|null
      */
     public function fetchBorrowerInfo(string $borrowerId): ?array
     {
@@ -102,6 +106,8 @@ class BiblioSsoService
      *         }
      *     }
      * }
+     *
+     * @return array<string, mixed>|null
      */
     public function fetchUserProfile(string $sessionId): ?array
     {

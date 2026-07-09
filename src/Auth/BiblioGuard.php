@@ -64,6 +64,8 @@ class BiblioGuard implements Guard
 
     /**
      * Validate a user's credentials.
+     *
+     * @param  array<string, mixed>  $credentials
      */
     public function validate(array $credentials = []): bool
     {

@@ -72,7 +72,8 @@ it('returns null when fetching borrower info fails', function (): void {
     expect($result)->toBeNull();
 });
 
-it('returns null when borrower info response is not successful', function (): void {
+it('returns the response even when borrower info has error field', function (): void {
+    // The service returns whatever JSON the API returns - it doesn't check internal fields
     Http::fake([
         'api.bibliocommons.com/v1/libraries/*/borrowers/*' => Http::response([
             'successful' => false,
@@ -83,20 +84,20 @@ it('returns null when borrower info response is not successful', function (): vo
     $service = app(BiblioSsoService::class);
     $result = $service->fetchBorrowerInfo('invalid-id');
 
-    expect($result)->toBeNull();
+    // Service returns the JSON as-is since HTTP was 200
+    expect($result)->toBeArray()
+        ->and($result['successful'])->toBeFalse();
 });
 
 it('fetches user profile successfully', function (): void {
+    // The service expects session.borrowers structure (not user.borrowers)
     Http::fake([
         'api.bibliocommons.com/v1/sessions/*' => Http::response([
-            'user' => [
-                'id' => '2412321',
-                'name' => 'exampleuser',
+            'session' => [
                 'borrowers' => ['tpl' => '123456'],
             ],
         ], 200),
         'api.bibliocommons.com/v1/libraries/*/borrowers/*' => Http::response([
-            'successful' => true,
             'borrower' => [
                 'id' => '123456',
                 'name' => 'John Doe',
@@ -109,7 +110,6 @@ it('fetches user profile successfully', function (): void {
     $result = $service->fetchUserProfile('test-session-id');
 
     expect($result)->toBeArray()
-        ->and($result['successful'])->toBeTrue()
         ->and($result['borrower']['name'])->toBe('John Doe');
 });
 

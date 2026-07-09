@@ -19,11 +19,15 @@ class UninstallTplShared extends Command
 
     /**
      * Files to be modified.
+     *
+     * @var array<int, string>
      */
     protected array $filesToModify = [];
 
     /**
      * Removal status.
+     *
+     * @var array<string, string>
      */
     protected array $status = [];
 
@@ -100,6 +104,8 @@ class UninstallTplShared extends Command
 
     /**
      * Get installation information.
+     *
+     * @return array<string, mixed>
      */
     protected function getInstallationInfo(): array
     {
@@ -114,6 +120,8 @@ class UninstallTplShared extends Command
 
     /**
      * Show uninstall plan.
+     *
+     * @param  array<string, mixed>  $installInfo
      */
     protected function showUninstallPlan(array $installInfo): void
     {
@@ -194,7 +202,7 @@ class UninstallTplShared extends Command
             $pattern = '/\n\s*\/\/ TPL Shared - BiblioCommons Configuration.*?\'bibliocommons\'\s*=>\s*\[.*?\],\n/s';
             $newContent = preg_replace($pattern, '', $content);
 
-            if ($newContent !== $content) {
+            if ($newContent !== null && $newContent !== $content) {
                 File::put($configFile, $newContent);
                 $this->status['services_config'] = 'removed';
 
@@ -227,7 +235,7 @@ class UninstallTplShared extends Command
             // Remove guard
             $guardPattern = '/\n\s*\/\/ TPL Shared - BiblioCommons Guard.*?\'biblio\'\s*=>\s*\[.*?\],\n/s';
             $newContent = preg_replace($guardPattern, '', $content);
-            if ($newContent !== $content) {
+            if ($newContent !== null && $newContent !== $content) {
                 $content = $newContent;
                 $modified = true;
             }
@@ -235,7 +243,7 @@ class UninstallTplShared extends Command
             // Remove provider
             $providerPattern = '/\n\s*\/\/ TPL Shared - BiblioCommons Provider.*?\'biblio\'\s*=>\s*\[.*?\],\n/s';
             $newContent = preg_replace($providerPattern, '', $content);
-            if ($newContent !== $content) {
+            if ($newContent !== null && $newContent !== $content) {
                 $content = $newContent;
                 $modified = true;
             }
@@ -273,7 +281,7 @@ class UninstallTplShared extends Command
             $blockPattern = '/\n\s*\/\/ TPL Shared - BiblioCommons Middleware\s*\n\s*\$middleware->alias\(\[\s*\'biblio\.auth\'\s*=>\s*\\\\Tpl\\\\Shared\\\\Http\\\\Middleware\\\\AuthenticateBiblioCommons::class,\s*\]\);\n/s';
             $newContent = preg_replace($blockPattern, '', $content);
 
-            if ($newContent !== $content) {
+            if ($newContent !== null && $newContent !== $content) {
                 File::put($bootstrapFile, $newContent);
                 $this->status['bootstrap_app'] = 'removed';
 
@@ -284,7 +292,7 @@ class UninstallTplShared extends Command
             $linePattern = '/\s*\'biblio\.auth\'\s*=>\s*\\\\Tpl\\\\Shared\\\\Http\\\\Middleware\\\\AuthenticateBiblioCommons::class,\n/';
             $newContent = preg_replace($linePattern, '', $content);
 
-            if ($newContent !== $content) {
+            if ($newContent !== null && $newContent !== $content) {
                 File::put($bootstrapFile, $newContent);
                 $this->status['bootstrap_app'] = 'removed';
 
@@ -324,7 +332,7 @@ class UninstallTplShared extends Command
             $pattern = '/\n# TPL Shared - BiblioCommons Configuration.*?BIBLIO_SESSION_COOKIE=.*?\n/s';
             $newContent = preg_replace($pattern, "\n", $content);
 
-            if ($newContent !== $content) {
+            if (is_string($newContent) && $newContent !== $content) {
                 File::put($envFile, $newContent);
                 $this->status['env_file'] = 'removed';
 

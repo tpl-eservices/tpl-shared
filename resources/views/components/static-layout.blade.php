@@ -25,7 +25,7 @@
   <link rel="icon" href="{{ secure_asset('favicon.svg') }}" type="image/svg+xml">
   <link rel="apple-touch-icon" href="{{ secure_asset('apple-touch-icon.png') }}">
   <link rel="preconnect" href="https://fonts.bunny.net">
-  <link href="https://fonts.bunny.net/css?family=Playfair+Display|IBM+Plex+Sans+Condensed:600|Roboto:900|Open+Sans:400,500,700" rel="stylesheet" />
+  <link href="https://fonts.bunny.net/css?family=Playfair+Display|IBM+Plex+Sans+Condensed:600|Roboto:900|Open+Sans:400,500,600,700" rel="stylesheet" />
 
   {{-- BiblioCommons CSS (Link Tags) --}}
   @if (!empty($bibliocommons['css']))
@@ -35,6 +35,8 @@
   @if (tplSharedAsset('css'))
       <link rel="stylesheet" href="{{ tplSharedAsset('css') }}">
   @endif
+
+  {{ $head ?? '' }}
 
   @stack('head')
 </head>
