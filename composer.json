@@ -10,7 +10,7 @@
             "name": "Toronto Public Library"
         }
     ],
-    "version": "0.2.2",
+    "version": "0.2.1",
     "require": {
         "php": "^8.4.23",
         "laravel/framework": "^12.0"
