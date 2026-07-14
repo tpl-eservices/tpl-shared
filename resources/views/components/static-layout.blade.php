@@ -1,6 +1,7 @@
 @props([
     'center' => false,
     'class' => 'max-w-4xl mb-10 mt-10 mx-auto px-5 lg:px-0',
+    'title' => '',
 ])
 
 <!DOCTYPE html>
@@ -19,7 +20,7 @@
  
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ config('app.name', 'TPL') }}</title>
+  <title>{{ $title ? $title : config('app.name', 'TPL') }}</title>
 
   <link rel="icon" href="{{ secure_asset('favicon.ico') }}" sizes="any">
   <link rel="icon" href="{{ secure_asset('favicon.svg') }}" type="image/svg+xml">
