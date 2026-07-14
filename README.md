@@ -91,6 +91,33 @@ php artisan vendor:publish --tag=tpl-shared-assets   # Publish frontend assets
 php artisan vendor:publish --tag=tpl-shared-config   # Publish config
 ```
 
+## Release Management
+
+Releases are handled via the `Makefile` (Unix/Mac; see `docs/development/VERSION_MANAGEMENT.md` for Windows equivalents).
+
+```bash
+make release      # Full release: format, build, tag-patch, push
+```
+
+Individual commands:
+
+| Command             | Purpose                                              |
+| --------------------| ---------------------------------------------------- |
+| `make help`           | List all available commands                          |
+| `make status`         | Show current version, git status, recent commits     |
+| `make test`           | Run the test suite                                   |
+| `make format`         | Format code with Laravel Pint                        |
+| `make build`          | Build frontend assets with Vite                      |
+| `make tag-patch`      | Bump patch version (0.1.0 -> 0.1.1)                  |
+| `make tag-minor`      | Bump minor version (0.1.0 -> 0.2.0)                  |
+| `make tag-major`      | Bump major version (0.1.0 -> 1.0.0)                  |
+| `make push`           | Push commits and tags to GitHub                      |
+| `make update-version` | Sync `composer.json`/`package.json` from latest tag      |
+| `make install`        | Install Composer and pnpm dependencies               |
+| `make clean`          | Remove `vendor`, `node_modules`, and cached files        |
+
+See [Version Management](docs/development/VERSION_MANAGEMENT.md) for full release workflows and troubleshooting.
+
 ## Documentation
 
 - [Installation Guide](docs/installation/README.md)
