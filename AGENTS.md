@@ -4,7 +4,7 @@ This file contains guidelines and commands for agentic coding agents working on 
 
 ## Project Overview
 
-TPL Shared is a **distributable Laravel package** that provides common components, views, assets, and integrations for TPL (Toronto Public Library) projects. This package is designed to be **shared across multiple Laravel 12 host applications** and includes BiblioCommons SSO integration, React components with Inertia.js, and shared frontend assets.
+TPL Shared is a **distributable Laravel package** that provides common components, views, assets, and integrations for TPL (Toronto Public Library) projects. This package is designed to be **shared across multiple Laravel 12/13 host applications** and includes BiblioCommons SSO integration, React components with Inertia.js, and shared frontend assets.
 
 **Important:** This is a package, not a standalone Laravel application. All code must be developed with package distribution in mind.
 
@@ -30,7 +30,7 @@ docs/
 
 **Tech Stack:**
 
-- PHP 8.4+ with Laravel 12.x
+- PHP 8.4+ with Laravel 12.x or 13.x
 - React 19 with TypeScript
 - Inertia.js v2 for frontend routing
 - Tailwind CSS v4 for styling
@@ -449,7 +449,7 @@ async function fetchData<T>(url: string): Promise<T> {
 
 This project follows Laravel Boost guidelines with specific focus on:
 
-- Laravel 12 conventions and structure
+- Laravel 12/13 conventions and structure
 - Inertia.js v2 best practices
 - React 19 with TypeScript patterns
 - Tailwind CSS v4 utility-first styling
@@ -487,7 +487,7 @@ This project follows Laravel Boost guidelines with specific focus on:
 
 #### Installation Requirements
 
-- Document minimum Laravel version requirements (12.x)
+- Document minimum Laravel version requirements (12.x or 13.x)
 - Specify required PHP extensions and dependencies
 - Provide clear installation instructions for host applications
 

@@ -17,7 +17,7 @@ Shared Laravel package for TPL projects providing BiblioCommons SSO authenticati
 ## Requirements
 
 - PHP 8.4+
-- Laravel 12.x
+- Laravel 12.x or 13.x
 
 ## Installation
 
