@@ -101,20 +101,22 @@ make release      # Full release: format, build, tag-patch, push
 
 Individual commands:
 
-| Command             | Purpose                                              |
-| --------------------| ---------------------------------------------------- |
-| `make help`           | List all available commands                          |
-| `make status`         | Show current version, git status, recent commits     |
-| `make test`           | Run the test suite                                   |
-| `make format`         | Format code with Laravel Pint                        |
+| Command               | Purpose                                              |
+| ----------------------| ---------------------------------------------------- |
 | `make build`          | Build frontend assets with Vite                      |
-| `make tag-patch`      | Bump patch version (0.1.0 -> 0.1.1)                  |
-| `make tag-minor`      | Bump minor version (0.1.0 -> 0.2.0)                  |
-| `make tag-major`      | Bump major version (0.1.0 -> 1.0.0)                  |
-| `make push`           | Push commits and tags to GitHub                      |
-| `make update-version` | Sync `composer.json`/`package.json` from latest tag      |
+| `make clean`          | Remove `vendor`, `node_modules`, and cached files     |
+| `make format`         | Format code with Laravel Pint                        |
+| `make help`           | List all available commands                          |
 | `make install`        | Install Composer and pnpm dependencies               |
-| `make clean`          | Remove `vendor`, `node_modules`, and cached files        |
+| `make push`           | Push commits and tags to GitHub                      |
+| `make release`        | All-inclusive command to make a new release          |
+| `make status`         | Show current version, git status, recent commits     |
+| `make tag-major`      | Bump major version (0.1.0 -> 1.0.0)                  |
+| `make tag-minor`      | Bump minor version (0.1.0 -> 0.2.0)                  |
+| `make tag-patch`      | Bump patch version (0.1.0 -> 0.1.1)                  |
+| `make test`           | Run the test suite                                   |
+| `make update-version` | Sync `composer.json`/`package.json` from latest tag  |
+| ----------------------| ---------------------------------------------------- |
 
 See [Version Management](docs/development/VERSION_MANAGEMENT.md) for full release workflows and troubleshooting.
 
@@ -147,4 +149,5 @@ make tag-patch    # 0.1.0 -> 0.1.1
 make tag-minor    # 0.1.0 -> 0.2.0
 make tag-major    # 0.1.0 -> 1.0.0
 make push         # Push tags to GitHub
+make release      # All-in-one command
 ```
